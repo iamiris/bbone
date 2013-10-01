@@ -1,14 +1,11 @@
-<div class="control-group">
-    <label class="control-label">
-        {{elementLabel this}}
-    </label>
-
+<div class="form-group">
+    <label>{{elementLabel this}}</label>
     <div class="controls">
-        <select name="{{name}}" class="el-{{name}}">
+        <select name="{{name}}" class="el-{{name}} form-control">
             {{#each options}}
             <option value="{{id}}">{{name}}</option>
             {{/each}}
         </select>
-        <span class="help-inline"></span>
+        <span class="message-block"></span>
     </div>
 </div>

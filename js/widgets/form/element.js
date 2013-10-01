@@ -8,10 +8,9 @@
 define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], function(app, Base, Validator, inputViewTemplate) {
     'use strict';
 
-    var DOT_CONTROL_GROUP = '.control-group';
-    var DOT_CONTROL_LABEL = '.control-label';
-    var DOT_HELP_INLINE = '.help-inline';
-    var INVALID_CLASS = 'error';
+    var DOT_CONTROL_GROUP = '.form-group';
+    var DOT_MESSAGE_BLOCK = '.message-block';
+    var INVALID_CLASS = 'has-error';
 
 
     var ElementModel = Base.Model.extend({
@@ -153,7 +152,7 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
            // console.log(value, 'txt');
         },
         errorCodeChangeHandler: function(errorCode) {
-            var el = this.$(DOT_HELP_INLINE);
+            var el = this.$(DOT_MESSAGE_BLOCK);
             //console.log('errorCodeChangeHandler',this.model.id, el, errorCode);
             if (errorCode === '') {
                 el.empty();
