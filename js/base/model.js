@@ -88,13 +88,13 @@ define(function() {
             return filter.value === value;
         },
         'startsWith':function(filter, value){
-            return new RegExp('^'+value,'i').test(filter.value);
+            return new RegExp('^'+filter.value,'i').test(value);
         },
         'endsWith':function(filter, value){
-            return new RegExp(value+'$','i').test(filter.value);
+            return new RegExp(filter.value+'$','i').test(value);
         },
         'has':function(filter, value){
-            return new RegExp(value,'i').test(filter.value);
+            return new RegExp(filter.value,'i').test(value);
         }
     }
 

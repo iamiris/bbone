@@ -5,9 +5,9 @@ define([
     'base/configurableModel',
     'base/collection',
     'base/util',
-    'base/collectionView'
+    'widgets/table/rowCollection'
 ],
-    function (baseApp, BaseView, BaseModel, ConfigurableModel, BaseCollection, baseUtil, CollectionView) {
+    function (baseApp, BaseView, BaseModel, ConfigurableModel, BaseCollection, baseUtil, RowCollection) {
 
 
         var getDefaultTableConfigs = function(){
@@ -19,18 +19,16 @@ define([
             }
         }
 
-        var TableModel = ConfigurableModel.extend({
-            constructor: function (attributes, options) {
-                options = options || {};
-                options.config = _.extend({},getDefaultTableConfigs() , options.config);
-                ConfigurableModel.call(this, attributes, options);
-            }
+        var TableModel = BaseModel.extend({
+
         })
+
+
 
         var RowView = BaseView.extend({
             tagName: 'tr',
             className: 'table-row',
-            template: '{{#each items}}<td data-key="{{key}}" class="{{classNames}}"><div class="cell-value" style="text-align: {{align}}">{{value}}</div></td>{{/each}}',
+            template: '{{#each items}}<td data-key="{{key}}" class="{{classNames}}"><div class="cell-value" style="text-align: {{align}}">{{#if renderHTML}}{{{value}}}{{else}}{{value}}{{/if}}</div></td>{{/each}}',
             useDeepJSON: true
         })
 
@@ -41,18 +39,16 @@ define([
 
         var setupRowRender = function () {
             var _this = this;
-            var model = _this.model;
+
             var viewIndex = {};
             var el = this.$el;
             var coll = this.getOption('rowCollection');
             var columns = this.getOption('columns');
-            var sortOrder = model.getConfig('sortOrder');
-            var sortKey = model.getConfig('sortKey');
+            var sortOrder = coll.getConfig('sortOrder');
+            var sortKey = coll.getConfig('sortKey');
 
 
-            _this.addItem = function (model, containerEl) {
-
-                var index = coll.indexOf(model);
+            _this.addItem = function (model,index, containerEl) {
 
                 var rowValueArray = _.map(columns, function (item) {
                     var classList = ['cell'];
@@ -65,11 +61,14 @@ define([
                         classList.push('even')
                     }
 
+                    var dataObj = model.toJSON();
+
                     return {
                         key: item.key,
                         classNames: classList.join(' '),
-                        value: baseApp.getFormatted(model.get(item.key), item.formatter),
-                        align:item.align || 'left'
+                        value: baseApp.getFormatted(dataObj[item.key], item.formatter, dataObj),
+                        align:item.align || 'left',
+                        renderHTML:item.renderHTML
                     }
 
                 })
@@ -118,23 +117,22 @@ define([
             },
             postRender: function () {
                 var _this = this;
-
                 var el = this.$el;
                 var rowList = this.$('.row-list');
                 var coll = this.getOption('rowCollection');
                 _this.renderHeader(rowList);
                 el.hide();
-                coll.each(function (model) {
-                    _this.addItem(model, rowList);
+                coll.processedEach(function (model, index) {
+                    _this.addItem(model, index, rowList);
                 });
                 el.show();
             },
             renderHeader: function (rowList) {
                 var _this = this;
-                var model = _this.model;
+                var coll = this.getOption('rowCollection');
                 var columns = this.getOption('columns');
-                var sortOrder = model.getConfig('sortOrder');
-                var sortKey = model.getConfig('sortKey');
+                var sortOrder = coll.getOption('sortOrder');
+                var sortKey = coll.getOption('sortKey');
 
                 var columnsArray = _.map(columns, function (item) {
                     var classList = ['header-cell'];
@@ -151,7 +149,7 @@ define([
                     }
                 })
 
-                console.log(columnsArray);
+
                 var headerModel = new BaseModel({
                     items: new BaseCollection(columnsArray)
                 })
@@ -167,7 +165,7 @@ define([
 
         return {
             View: View,
-            RowCollection: BaseCollection,
+            RowCollection: RowCollection,
             Model:TableModel
         }
 
