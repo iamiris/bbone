@@ -116,9 +116,16 @@ define(['require', 'base/router', 'base/dataLoader'], function (require, Router,
             return def;
         },
         beautifyId: function (s) {
+            s = s.replace(/_([a-z])/g, function (s) {
+                return s.toUpperCase()
+            });
+
+            s= s.replace(/_/g,'');
+
             s = s.replace(/([A-Z])/g, function (s) {
                 return ' ' + s
             });
+
             return s.replace(/(^.)/g, function (s) {
                 return s.toUpperCase()
             });
@@ -128,6 +135,18 @@ define(['require', 'base/router', 'base/dataLoader'], function (require, Router,
         },
         getTemplateIndex: function () {
             return templateIndex;
+        },
+        getFormatted:function(value, format){
+            switch(format){
+                case undefined:
+                    return value;
+                    break;
+
+                case 'currency':
+                    return app.format('$0,000')(value);
+                    break;
+            }
+
         },
         getHash: getHash
     };
