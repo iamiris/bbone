@@ -38,9 +38,14 @@ define(['base/app','base/model', 'base/collection'], function(baseApp, BaseModel
 
         collection.getFiltered = function(arrayOfModels){
             var filtersArray = _.values(filtersIndex);
-            return _.filter(arrayOfModels,function(model){
-                return  model.checkFilters(filtersArray);
-            });
+            if(filtersArray.length === 0){
+                return arrayOfModels;
+            }else{
+                return _.filter(arrayOfModels,function(model){
+                    return  model.checkFilters(filtersArray);
+                });
+            }
+
         }
 
         collection.processedEach = function(iterator, context){
@@ -65,12 +70,12 @@ define(['base/app','base/model', 'base/collection'], function(baseApp, BaseModel
 
         collection.nextPage = function(){
             var page  = collection.getConfig('page');
-            collection.setConfig('page', page+1);
+            collection.setConfig('page', Math.min(page+1,totalPages));
         }
 
         collection.prevPage = function(){
             var page  = collection.getConfig('page');
-            collection.setConfig('page', page-1);
+            collection.setConfig('page', Math.max(1, page-1));
         }
 
 
