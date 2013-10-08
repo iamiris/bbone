@@ -326,12 +326,14 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
 
         var bumpLoadingUp = function () {
             runningRequestCount++;
-            context.loadingHandler.call(context, true);
+            if (runningRequestCount > 0) {
+                context.loadingHandler.call(context, true);
+            }
         }
 
         var bumpLoadingDown = function () {
             runningRequestCount--;
-            if (runningRequestCount === 0) {
+            if (runningRequestCount < 1) {
                 context.loadingHandler.call(context, false);
             }
         }
@@ -343,11 +345,11 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
 
             var defArray = _.map(configArray, function (config) {
                 var def = app.getRequestDef(config);
-                def.always(bumpLoadingDown);
                 if (config.callback) {
                     def.always(config.callback);
                 }
                 bumpLoadingUp();
+                def.always(bumpLoadingDown);
                 return def
             })
 

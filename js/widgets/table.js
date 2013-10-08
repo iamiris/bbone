@@ -10,19 +10,9 @@ define([
     function (baseApp, BaseView, BaseModel, ConfigurableModel, BaseCollection, baseUtil, RowCollection) {
 
 
-        var getDefaultTableConfigs = function(){
-            return {
-                sortOrder: 'asc',
-                sortKey: '',
-                page: 1,
-                perPage: 100
-            }
-        }
-
         var TableModel = BaseModel.extend({
 
         })
-
 
 
         var RowView = BaseView.extend({
@@ -48,7 +38,7 @@ define([
             var sortKey = coll.getConfig('sortKey');
 
 
-            _this.addItem = function (model,index, containerEl) {
+            _this.addItem = function (model, index, containerEl) {
 
                 var rowValueArray = _.map(columns, function (item) {
                     var classList = ['cell'];
@@ -57,7 +47,7 @@ define([
                         classList.push(sortOrder);
                     }
 
-                    if(index%2===0){
+                    if (index % 2 === 0) {
                         classList.push('even')
                     }
 
@@ -67,8 +57,8 @@ define([
                         key: item.key,
                         classNames: classList.join(' '),
                         value: baseApp.getFormatted(dataObj[item.key], item.formatter, dataObj),
-                        align:item.align || 'left',
-                        renderHTML:item.renderHTML
+                        align: item.align || 'left',
+                        renderHTML: item.renderHTML
                     }
 
                 })
@@ -122,10 +112,35 @@ define([
                 var coll = this.getOption('rowCollection');
                 _this.renderHeader(rowList);
                 el.hide();
-                coll.processedEach(function (model, index) {
-                    _this.addItem(model, index, rowList);
-                });
+
+                var collConfig = coll.getConfigs();
+
+                if (collConfig.requestId) {
+
+                    var def = _this.addRequest({
+                        id: collConfig.requestId,
+                        params: _.omit(collConfig, 'requestId')
+                    })
+
+                    def.done(function (resp) {
+                        coll.reset(resp.results);
+                        coll.setConfig('totalRecords', resp.totalRecords);
+
+                        coll.each(function (model, index) {
+                            _this.addItem(model, index, rowList);
+                        });
+                        el.show();
+                    })
+
+
+                } else {
+                    coll.processedEach(function (model, index) {
+                        _this.addItem(model, index, rowList);
+                    });
+                }
                 el.show();
+
+
             },
             renderHeader: function (rowList) {
                 var _this = this;
@@ -145,7 +160,7 @@ define([
                         key: item.key,
                         classNames: classList.join(' '),
                         value: item.label || baseApp.beautifyId(item.key),
-                        align:item.align || 'left'
+                        align: item.align || 'left'
                     }
                 })
 
@@ -166,7 +181,7 @@ define([
         return {
             View: View,
             RowCollection: RowCollection,
-            Model:TableModel
+            Model: TableModel
         }
 
 
