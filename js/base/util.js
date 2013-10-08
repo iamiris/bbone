@@ -11,14 +11,15 @@ define(function() {
         });
         return obj;
     };
-    var objectToParams = function(obj) {
+    var objectToParams = function(obj, separator) {
         var str = [];
+        separator = separator || ';';
 
         _.each(obj, function(value, index) {
             str.push(index + '=' + value);
         });
 
-        return str.join(';');
+        return str.join(separator);
     };
 
 

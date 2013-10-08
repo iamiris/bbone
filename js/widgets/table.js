@@ -129,10 +129,15 @@ define([
                         coll.each(function (model, index) {
                             _this.addItem(model, index, rowList);
                         });
-                        el.show();
                     })
-
-
+                } else if (collConfig.baseUrl) {
+                    _this.listenToOnce(coll, 'add', function () {
+                        coll.each(function (model, index) {
+                            _this.addItem(model, index, rowList);
+                        });
+                    })
+                    coll.fetch({data: _.omit(collConfig, 'baseUrl'),
+                        processData: true});
                 } else {
                     coll.processedEach(function (model, index) {
                         _this.addItem(model, index, rowList);

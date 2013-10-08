@@ -1,4 +1,4 @@
-define(['base/app', 'base/model', 'base/collection'], function (baseApp, BaseModel, BaseCollection) {
+define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (baseApp, baseUtil, BaseModel, BaseCollection) {
 
 
     var Collection = BaseCollection.extend({
@@ -77,7 +77,7 @@ define(['base/app', 'base/model', 'base/collection'], function (baseApp, BaseMod
         collection.nextPage = function () {
 
             var configs = collection.getConfigs();
-            var totalPages = Math.ceil(configs.totalRecords/configs.perPage);
+            var totalPages = Math.ceil(configs.totalRecords / configs.perPage);
 
             var page = collection.getConfig('page');
             collection.setConfig('page', Math.min(page + 1, totalPages));
@@ -120,7 +120,21 @@ define(['base/app', 'base/model', 'base/collection'], function (baseApp, BaseMod
 
     }
 
-    var setupFunctions = [configureMixin, setupFilters, setupPagination];
+    var setupUrlFetch = function (collection) {
+        collection.url = function () {
+            return collection.getConfig('baseUrl');
+        }
+
+        collection.parse = function (data) {
+            collection.setConfig('totalRecords', 100);
+            return _.map(data.results, function (item) {
+                return item.user;
+            })
+        }
+
+    }
+
+    var setupFunctions = [configureMixin, setupFilters, setupPagination, setupUrlFetch];
 
     return Collection;
 });
