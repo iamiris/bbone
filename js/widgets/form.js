@@ -197,6 +197,8 @@ define([
                         obj[model.id] = model.get('value');
                     }
                 });
+            }else{
+                obj.errors = errors;
             }
             return obj;
         },
