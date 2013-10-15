@@ -7,6 +7,7 @@
  */
 define([
     'base/app',
+    'base/util',
     'base',
     'widgets/form/element',
     'widgets/messageStack',
@@ -16,7 +17,7 @@ define([
     'text!./form/selectView.html',
     'text!./form/textAreaView.html',
     'text!./form/buttonView.html'
-], function (app, Base, Element, MessageStack, checkListTemplate, checkBoxTemplate, radioListTemplate, selectViewTemplate, textAreaTemplate, buttonViewTemplate) {
+], function (app, baseUtil, Base, Element, MessageStack, checkListTemplate, checkBoxTemplate, radioListTemplate, selectViewTemplate, textAreaTemplate, buttonViewTemplate) {
     'use strict';
 
     var ElementView = Element.View;
@@ -34,7 +35,7 @@ define([
     });
 
     var CheckboxView = ElementView.extend({
-        template:checkBoxTemplate,
+        template: checkBoxTemplate,
         valueFunction: function () {
             return this.$('input').is(':checked');
         },
@@ -60,11 +61,7 @@ define([
         template: selectViewTemplate,
         events: {
             'change select': 'updateValue',
-            'blur select': function () {
-                this.updateValue();
-                this.removeFocus();
-            },
-            'click': 'setFocus'
+            'blur select': 'updateValue'
         },
         valueFunction: function () {
             return this.$('select').val();
@@ -131,6 +128,37 @@ define([
         }
     });
 
+
+    var InputView = ElementView.extend({
+        events: {
+            'change input': 'updateValue',
+            'blur input': 'resetIfEmpty',
+            'focus input': 'selectIfDefault',
+            'click input': 'clearIfDefault'
+        },
+        selectIfDefault: function () {
+            if (this.model.isElementDefault()) {
+                this.$('input').select();
+            }
+        },
+        clearIfDefault: function () {
+            if (this.model.isElementDefault()) {
+                this.$('input').val('');
+            }
+        },
+        resetIfEmpty: function () {
+            var inputValue = this.$('input').val();
+            if (inputValue === '') {
+                var attr = this.model.toJSON();
+                if(attr.defaultValue){
+                    this.$('input').val(attr.defaultValue);
+                }
+            }
+            this.updateValue();
+        }
+    });
+
+
     var HiddenJSONView = ElementView.extend({
         template: '<input type="hidden" value="{{value}}" name="{{name}}" />',
         valueChangeHandler: function (value) {
@@ -165,7 +193,7 @@ define([
     };
 
     var getViewByType = function (type) {
-        return typeViewIndex[type] || ElementView;
+        return typeViewIndex[type] || InputView;
     };
 
     var setViewByType = function (type, View) {
@@ -255,6 +283,7 @@ define([
         },
         addElement: function (model) {
             var attr = model.toJSON();
+            var thisView = this;
             var ElementView = this.typeViewIndex[attr.type] || getViewByType(attr.type);
 
             var name = attr.name;
@@ -270,13 +299,18 @@ define([
                 view.postRender();
                 view.syncAttributes();
             } else {
-                view = new ElementView({
-                    model: model
-                });
+
+                view = baseUtil.createView({
+                    View: ElementView,
+                    model: model,
+                    parentView: thisView
+                })
+
                 var group = attr.group;
                 this.$('.' + groupPrefix + group).append(view.render().el);
             }
-
+        },
+        removeElement: function (model) {
 
         },
         renderGroupContainers: function () {

@@ -45,7 +45,7 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
             var activeRules = this.get('activeRules');
             var isActive = _.every(activeRules, function(rule) {
                 var sourceElement = this.collection.get(rule.element);
-                return activeRuleMethods[rule.expr].call(null, sourceElement, rule);
+                return activeRuleMethods[rule.expr].call(this, sourceElement, rule);
             }, this);
             this.set('active', isActive);
         },
@@ -96,6 +96,10 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
             if (this.collection) {
                 return this.collection.get(siblingName).set('value', value);
             }
+        },
+        isElementDefault:function(){
+            var attributes = this.toJSON();
+            return attributes.value === attributes.defaultValue;
         }
     });
 
@@ -107,16 +111,10 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
     var ElementView = Base.View.extend({
         tagName: 'div',
         className: 'element',
-        events: {
-            'change input': 'updateValue',
-            'blur input': 'updateValue',
-            'click': 'setFocus'
-        },
         template: inputViewTemplate,
-        // typeChangeHandler:function(value){
-        //     this.$('input').attr('type', value);
-        // },
-
+        dataEvents:{
+            'forceRender':'render'
+        },
         postRender: function() {
             this.syncAttributes();
         },
@@ -175,14 +173,6 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
                 this.model.isElementValid();
             }
 
-        },
-        setFocus: function() {
-            var form = this.$el.closest('form');
-            form.find('.focused').removeClass('focused');
-            this.$el.addClass('focused');
-        },
-        removeFocus: function() {
-            this.$el.removeClass('focused');
         }
     });
 
@@ -204,7 +194,7 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
         },
         'function': function(source, rule) {
             var func = rule.func;
-            return func.apply(null, arguments);
+            return func.apply(this, arguments);
         }
     };
 
