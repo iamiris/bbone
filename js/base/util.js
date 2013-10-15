@@ -108,7 +108,13 @@ define(function() {
                     if (config['replaceHTML']) {
                         config.parentEl.empty();
                     }
-                    view.$el.appendTo(config.parentEl);
+
+                    if(parentView && parentView.$(config.parentEl).length > 0){
+                        view.$el.appendTo(parentView.$(config.parentEl));
+                    }else{
+                        view.$el.appendTo(config.parentEl);
+                    }
+
                 }
             }
 

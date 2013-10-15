@@ -204,10 +204,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         var subViewConfigs = context.getOption('views');
 
         _.each(subViewConfigs, function (viewConfig, viewName) {
-            if (viewConfig.parentEl && typeof viewConfig.parentEl === 'string') {
-                viewConfig.parentEl = context.$(viewConfig.parentEl);
-                viewConfig.parentView = context;
-            }
+            viewConfig.parentView = context;
             views[viewName] = util.createView(viewConfig);
         });
 

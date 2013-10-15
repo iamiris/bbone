@@ -10,6 +10,7 @@ define(['base/view', 'base/model', 'widgets/header'], function(BaseView, BaseMod
         },
         changeHandler: function(changes) {
             var attr = this.model.toJSON();
+            console.log(changes, attr);
             if (changes.appId) {
                 require(['apps/' + attr.appId], function() {
                     require(['apps/' + attr.appId + '/app'], function(app) {
