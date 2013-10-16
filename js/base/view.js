@@ -2,8 +2,8 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
     var BaseView = Backbone.View.extend({
         constructor: function (options) {
             var _this = this;
-            Backbone.View.call(_this, options);
             _this.removeQue = [];
+            Backbone.View.call(_this, options);
             _.each(setupFunctions, function (func) {
                 func(_this);
             });
@@ -83,7 +83,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             this.removeChildViews();
             Backbone.View.prototype.remove.call(this);
             this.removeReferences();
-            this.removeQue = null;
+            //this.removeQue = null;
         },
         removeReferences:function(func){
             if(func){
@@ -319,7 +319,6 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
 
 
     var setupMetaRequests = function (context) {
-
         var requestConfigs = context.getOption('requests') || context.requests;
         var runningRequestCount = 0;
 
@@ -378,7 +377,6 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         context.removeReferences(function(){
             requestConfigs=null;
             runningRequestCount=null;
-            context=null;
         })
 
 

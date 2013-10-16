@@ -28,7 +28,7 @@ define([
         })
 
         var setupRowRender = function () {
-            var _this = this;
+            var _this = this; 
 
             var viewIndex = {};
             var el = this.$el;
