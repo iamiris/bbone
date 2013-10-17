@@ -9,17 +9,18 @@ define([
     function (baseApp, BaseView, BaseModel, baseUtil, paginationTemplate, RowCollection) {
 
         var View = BaseView.extend({
-            constructor:function(){
+/*            constructor:function(){
                 BaseView.apply(this, arguments);
                 var rowCollection = this.getOption('rowCollection');
                 this.listenTo(rowCollection, 'config_change',this.render);
-            },
+            },*/
             template:paginationTemplate,
             renderTemplate:function(templateFunction){
                 var rowCollection = this.getOption('rowCollection');
+                var records = rowCollection.getProcessedRecords();
                 var dataObj = rowCollection.getConfigs();
                 dataObj.start = ((dataObj.page-1)*dataObj.perPage)+1;
-                dataObj.end = (dataObj.page)*dataObj.perPage;
+                dataObj.end = Math.min((dataObj.page)*dataObj.perPage, dataObj.totalRecords);
                 this.$el.html(templateFunction(dataObj));
             },
             actionHandler:function(action){

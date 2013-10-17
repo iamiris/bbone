@@ -7,6 +7,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             _.each(setupFunctions, function (func) {
                 func(_this);
             });
+
             /*
              _.each(_this.extensions, function (func) {
              func.call(_this, options);
@@ -83,7 +84,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             this.removeChildViews();
             Backbone.View.prototype.remove.call(this);
             this.removeReferences();
-            //this.removeQue = null;
+            this.removeQue = null;
         },
         removeReferences:function(func){
             if(func){
@@ -377,6 +378,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         context.removeReferences(function(){
             requestConfigs=null;
             runningRequestCount=null;
+            context = null;
         })
 
 

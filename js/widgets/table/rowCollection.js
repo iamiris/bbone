@@ -37,6 +37,7 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
         }
 
         collection.getFiltered = function (arrayOfModels) {
+            //console.log(arrayOfModels.length, 'getFiltered');
             var filtersArray = _.values(filtersIndex);
             if (filtersArray.length === 0) {
                 return arrayOfModels;
@@ -48,8 +49,12 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
         }
 
+        collection.getProcessedRecords = function(){
+            return collection.getPaginated(collection.getFiltered(collection.toArray()));
+        }
+
         collection.processedEach = function (iterator, context) {
-            var finalArray = collection.getPaginated(collection.getFiltered(collection.toArray()))
+            var finalArray = collection.getProcessedRecords();
             _.each(finalArray, function (model, index) {
                 iterator.call(context || collection, model, index);
             })
@@ -64,9 +69,9 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
         collection.setConfig('totalRecords', collection.length);
 
         collection.getPaginated = function (arrayOfModels) {
+            //console.log(arrayOfModels.length, 'getPaginated');
             configs = collection.getConfigs();
             collection.setConfig('totalRecords', arrayOfModels.length);
-
             if (configs.paginated) {
                 return arrayOfModels.splice((configs.page - 1) * configs.perPage, configs.perPage);
             } else {
