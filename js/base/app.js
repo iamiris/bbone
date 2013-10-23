@@ -14,7 +14,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
     };
 
 
-    var templateIndex = {}, dataIndex = {};
+    var templateIndex = {}, dataIndex = {}, stringIndex = {};
 
     var app = {
         root: '/',
@@ -160,6 +160,16 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
         },
         setFormatter:function(type, formatterFunction){
             formatterIndex[type] = formatterFunction;
+        },
+        updateStringIndex:function(newStringsIndex){
+            stringIndex  = _.extend({}, stringIndex, newStringsIndex)
+        },
+        getString:function(strKey){
+            if(stringIndex[strKey]){
+                return stringIndex[strKey]
+            }else{
+                return strKey;
+            }
         },
         getHash: getHash
     };
