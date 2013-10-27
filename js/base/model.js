@@ -72,7 +72,7 @@ define(function() {
             var attributes = _.clone(this.attributes);
             if(useDeepJSON){
                 _.each(attributes, function(value, key){
-                    if(value.toJSON){
+                    if(value && value.toJSON){
                         attributes[key] = value.toJSON();
                     }
                 })

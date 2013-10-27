@@ -281,7 +281,7 @@ define([
         events: {
             'submit form': 'formSubmitHandler'
         },
-        template: '<div class="form-message-container"></div><form action="{{actionId}}" class="form-vertical" method=""> <div class="group-list"></div> <div class="grp-buttons"> </div> </form>',
+        template: '<div class="message-stack"></div><form action="{{actionId}}" class="form-vertical" method=""> <div class="group-list"></div> <div class="grp-buttons"> </div> </form>',
 
         postRender: function () {
             this.formEl = this.$('form');
@@ -341,9 +341,13 @@ define([
             var messageStack = new MessageStack.Model();
             var messageStackView = new MessageStack.View({
                 model: messageStack,
-                el: this.$('.form-message-container')
+                el: this.$('.message-stack')
             });
             messageStackView.render();
+
+            messageStack.messageCollection.on('all',function(){
+                console.log(arguments);
+            })
 
             this.on('showMessages', function (messages) {
                 messageStack.removeAllMessages();
