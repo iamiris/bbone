@@ -1,5 +1,6 @@
 define(['base', 'list/singleSelect'], function(Base, SingleSelect) {
 
+    "use strict";
 
     var setupFunctions = [setupMultiSelection];
 
@@ -20,7 +21,7 @@ define(['base', 'list/singleSelect'], function(Base, SingleSelect) {
         varObj.coll = context.get('items');
 
         if (!varObj.coll) {
-            varObj.coll = new ItemCollection();
+            varObj.coll = new SingleSelect.ItemCollection();
             context.set('items', varObj.coll);
         }
 
@@ -37,14 +38,14 @@ define(['base', 'list/singleSelect'], function(Base, SingleSelect) {
 
         context.setSelected = function(curItem) {
             curItem.toggleSelect();
-            updateSelected();
+            context.updateSelected();
         };
 
         context.selectAll = function() {
             varObj.coll.each(function(model) {
                 model.select();
             });
-            updateSelected();
+            context.updateSelected();
         };
 
         context.selectNone = function() {

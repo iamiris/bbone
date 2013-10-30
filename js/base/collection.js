@@ -1,5 +1,5 @@
 define(['base/app','base/model'], function(baseApp, BaseModel) {
-
+    "use strict";
     var BaseCollection = Backbone.Collection.extend({
         model: BaseModel,
         constructor: function (array, options) {

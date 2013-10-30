@@ -4,7 +4,7 @@ define([
     'list/singleSelect'
     ],
     function(app, Base, SingleSelect) {
-
+        'use strict';
         var baseUtil = Base.util;
 
         var NavItemView = Base.View.extend({

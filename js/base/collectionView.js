@@ -1,4 +1,5 @@
 define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemView, util) {
+    "use strict";
 
     var setupCollectionRender = function() {
         var _this = this;
@@ -16,7 +17,6 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
             var view = util.createView({model: model, attributes:{'data-id':model.id}, View: ItemView, parentView:_this});
             viewIndex[model.id] = view;
 
-            var index = coll.indexOf(model);
             if (index === 0) {
                 view.$el.prependTo(containerEl);
             }else if (index >= coll.length - 1) {
@@ -42,7 +42,7 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
             viewIndex = null;
             el = null;
             coll = null;
-        })
+        });
 
 
     };

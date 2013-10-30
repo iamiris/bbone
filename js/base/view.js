@@ -1,4 +1,6 @@
 define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) {
+    "use strict";
+
     var BaseView = Backbone.View.extend({
         constructor: function (options) {
             var _this = this;
@@ -41,17 +43,17 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                     _this.postRender();
                 });
 
-            }
+            };
 
             var metaLoadSuccess = function () {
                 if(_this.removeChildViews){
                     _this.removeChildViews();
                 }
                 continueRender();
-            }
+            };
 
             var metaDef = _this.loadMeta();
-            metaDef.done(metaLoadSuccess)
+            metaDef.done(metaLoadSuccess);
             return _this;
         },
         postRender: function () {
@@ -92,7 +94,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             }else{
                 _.each(this.removeQue,function(func){
                     func.call(this);
-                })
+                });
             }
         }
     });
@@ -178,7 +180,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             state=null;
             statedView=null;
             context=null;
-        })
+        });
 
     };
 
@@ -198,7 +200,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         context.removeReferences(function(){
             template=null;
             context=null;
-        })
+        });
     };
 
     var setupSubViews = function (context) {
@@ -222,17 +224,17 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
 
         context.getSubModel = function (viewId) {
             return context.getSubView(viewId).model;
-        }
+        };
 
         context.getSubAttribute = function (viewId, attributeName) {
             return context.getSubModel(viewId).get(attributeName);
-        }
+        };
 
         context.removeReferences(function(){
             subViewConfigs=null;
             views=null;
             context=null;
-        })
+        });
 
     };
 
@@ -304,7 +306,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         context.removeReferences(function(){
             context.$el.off();
             context=null;
-        })
+        });
     };
 
     var setupRenderEvents = function (context) {
@@ -328,14 +330,14 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             if (runningRequestCount > 0) {
                 context.loadingHandler.call(context, true);
             }
-        }
+        };
 
         var bumpLoadingDown = function () {
             runningRequestCount--;
             if (runningRequestCount < 1) {
                 context.loadingHandler.call(context, false);
             }
-        }
+        };
         context.addRequest = function (config, callback) {
             var configArray = config;
             if (!_.isArray(configArray)) {
@@ -349,8 +351,8 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                 }
                 bumpLoadingUp();
                 def.always(bumpLoadingDown);
-                return def
-            })
+                return def;
+            });
 
             var requestPromise = $.when.apply(null, defArray);
 
@@ -372,14 +374,14 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                 context.metaDef = def;
             }
             return context.metaDef;
-        }
+        };
 
 
         context.removeReferences(function(){
             requestConfigs=null;
             runningRequestCount=null;
             context = null;
-        })
+        });
 
 
     };
@@ -389,7 +391,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         var childViews =[];
         context.addChildView = function(view){
             childViews.push(view);
-        }
+        };
         context.removeChildViews = function(){
             _.each(childViews,function(view){
                 if(view && view.remove){
@@ -397,13 +399,13 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                 }
             });
             childViews = [];
-        }
+        };
 
         context.removeReferences(function(){
             childViews=null;
             context=null;
-        })
-    }
+        });
+    };
 
     var setupFunctions = [bindDataEvents, setupMetaRequests, setupTemplateEvents, setupAttributeWatch, setupActionNavigateAnchors, setupRenderEvents, setupStateEvents, setupChildViews];
 

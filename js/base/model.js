@@ -1,5 +1,5 @@
 define(function() {
-
+    "use strict";
     var BaseModel = Backbone.Model.extend({
         constructor: function (attributes, options) {
             var _this = this;
@@ -75,7 +75,7 @@ define(function() {
                     if(value && value.toJSON){
                         attributes[key] = value.toJSON();
                     }
-                })
+                });
             }
             return attributes;
         },
@@ -89,8 +89,8 @@ define(function() {
             var attributes = _this.toJSON();
 
             var filtered = _.every(filtersArray,function(filter){
-                return filterMethods[filter.expr].call(_this,filter, attributes[filter.column])
-            })
+                return filterMethods[filter.expr].call(_this,filter, attributes[filter.column]);
+            });
             return filtered;
         }
     });
@@ -109,7 +109,7 @@ define(function() {
         'has':function(filter, value){
             return new RegExp(filter.value,'i').test(value);
         }
-    }
+    };
 
     return BaseModel;
 });

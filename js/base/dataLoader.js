@@ -1,5 +1,5 @@
 define(['require'],function(require){
-
+    "use strict";
     var requestIndex = {};
     var dataLoader = {};
     var requestDefaults = {
@@ -7,12 +7,12 @@ define(['require'],function(require){
         params:{},
         url:'',
         parser: _.identity
-    }
+    };
 
     dataLoader.define = function(id, config){
         var requestConfig = _.extend({},requestDefaults, config)
         requestIndex[id]=requestConfig
-    }
+    };
 
     var getConfig = dataLoader.getConfig=function(id){
         if(requestIndex[id]){
@@ -20,7 +20,7 @@ define(['require'],function(require){
         }else{
             throw Error('Undefined request by Id: '+id);
         }
-    }
+    };
 
     dataLoader.getRequest = function(id,dataObj){
         var requestSettings = getConfig(id, dataObj);
@@ -37,7 +37,7 @@ define(['require'],function(require){
             }
             return $.ajax(settings);
         }
-    }
+    };
 
     return dataLoader;
 

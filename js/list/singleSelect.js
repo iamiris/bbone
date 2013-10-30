@@ -1,5 +1,7 @@
 define(['base'], function (Base) {
 
+    "use strict";
+
     var baseUtil = Base.util;
 
     var View = Base.View.extend({
@@ -151,7 +153,7 @@ define(['base'], function (Base) {
 
         model.selectFirst = function () {
             model.setSelected(coll.first());
-        }
+        };
 
         model.selectAt = function(index){
             if(coll.at(index)){
@@ -159,7 +161,7 @@ define(['base'], function (Base) {
             }else{
                 model.selectFirst();
             }
-        }
+        };
 
     }
 

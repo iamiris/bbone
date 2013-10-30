@@ -1,5 +1,5 @@
 define(['base/app'], function(app) {
-
+    "use strict";
     Handlebars.registerHelper('elementLabel', function(element) {
         return element.label || element.name;
     });

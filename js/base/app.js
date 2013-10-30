@@ -1,4 +1,5 @@
 define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function (require, Router, dataLoader) {
+    "use strict";
 
     var hex_md5 = window.hex_md5;
 
@@ -63,9 +64,6 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
         log: function () {
             console.log.apply(console, arguments);
         },
-        getString: function (str) {
-            return str;
-        },
         parseSuccessResponse: function (resp) {
             return resp;
         },
@@ -108,7 +106,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
                         def.resolve(parsedResponse);
 
                     }
-                })
+                });
 
                 request.fail(function (resp) {
                     def.resolve({errors:[{errorCode:'network issue', message:'Network failure try again later'}]});
@@ -119,17 +117,17 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
         },
         beautifyId: function (s) {
             s = s.replace(/_([a-z])/g, function (s) {
-                return s.toUpperCase()
+                return s.toUpperCase();
             });
 
             s= s.replace(/_/g,'');
 
             s = s.replace(/([A-Z])/g, function (s) {
-                return ' ' + s
+                return ' ' + s;
             });
 
             return s.replace(/(^.)/g, function (s) {
-                return s.toUpperCase()
+                return s.toUpperCase();
             });
         },
         getDataIndex: function () {
@@ -162,11 +160,11 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
             formatterIndex[type] = formatterFunction;
         },
         updateStringIndex:function(newStringsIndex){
-            stringIndex  = _.extend({}, stringIndex, newStringsIndex)
+            stringIndex  = _.extend({}, stringIndex, newStringsIndex);
         },
         getString:function(strKey){
             if(stringIndex[strKey]){
-                return stringIndex[strKey]
+                return stringIndex[strKey];
             }else{
                 return strKey;
             }

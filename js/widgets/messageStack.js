@@ -1,6 +1,6 @@
 define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], function (app, Base, List, template) {
 
-
+    'use strict';
     var baseUtil = Base.util;
 
 

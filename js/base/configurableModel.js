@@ -1,5 +1,5 @@
 define(['base/model'],function(BaseModel) {
-
+    "use strict";
     var ConfigurableModel = BaseModel.extend({
          constructor:function(attributes, options){
              var _this = this;
@@ -8,13 +8,13 @@ define(['base/model'],function(BaseModel) {
 
              _.each([configureMixin], function(func){
                 func(_this);
-             })
+             });
 
              var configModel = this.getConfigModel();
              this.setConfigs(_.extend({}, options.config));
              this.listenTo(this.getConfigModel(),'all',function(sourceEventName){
                  this.trigger.apply(this, ['config_'+sourceEventName].concat(_.rest(arguments)));
-             })
+             });
          }
     });
 
@@ -30,7 +30,7 @@ define(['base/model'],function(BaseModel) {
                 return config.get(key);
             },
             setConfigs:function(obj){
-                config.set(obj)
+                config.set(obj);
             },
             getConfigs:function(useDeep){
                 return config.toJSON(useDeep);
@@ -38,13 +38,13 @@ define(['base/model'],function(BaseModel) {
             getConfigModel:function(){
                 return config;
             }
-        }
+        };
 
         _.extend(context, methods);
 
 
 
-    }
+    };
 
 
 

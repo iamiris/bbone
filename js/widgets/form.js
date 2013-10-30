@@ -162,12 +162,12 @@ define([
     var MessageView = ElementView.extend({
         template:messageViewTemplate,
         valueChangeHandler:function(value){
-            this.$('.message').html(value)
+            this.$('.message').html(value);
         },
         valueFunction:function(){
             return this.$('.message').html();
         }
-    })
+    });
 
 
     var HiddenJSONView = ElementView.extend({
@@ -210,7 +210,7 @@ define([
 
     var setViewByType = function (type, View) {
         typeViewIndex[type] = View;
-    }
+    };
 
     var updateTypeViewIndex = function (indexObj) {
         typeViewIndex = _.extend({}, typeViewIndex, indexObj);
@@ -316,7 +316,7 @@ define([
                     View: ElementView,
                     model: model,
                     parentView: thisView
-                })
+                });
 
                 var group = attr.group;
                 this.$('.' + groupPrefix + group).append(view.render().el);
@@ -347,7 +347,7 @@ define([
 
             messageStack.messageCollection.on('all',function(){
                 console.log(arguments);
-            })
+            });
 
             this.on('showMessages', function (messages) {
                 messageStack.removeAllMessages();
@@ -397,8 +397,8 @@ define([
 
 
     FormView.addToTypeViewIndex = function (type, View) {
-        setViewByType(type, View)
-    }
+        setViewByType(type, View);
+    };
 
     return {
         Model: FormModel,

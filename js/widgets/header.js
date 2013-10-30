@@ -1,5 +1,5 @@
 define(['base/view', 'base/model', 'text!./header/header.html'], function(BaseView, BaseModel, template) {
-
+    'use strict';
     var HeaderView = BaseView.extend({
         template: template,
         appIdChangeHandler: function(value) {

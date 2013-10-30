@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     return {
         View: require('base/view'),
         Root: require('base/root'),

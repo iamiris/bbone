@@ -1,5 +1,5 @@
 define(function () {
-
+    "use strict";
     require(['base/app'], function (d3) {
 
         function d3_class(ctor, properties) {

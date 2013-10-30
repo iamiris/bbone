@@ -8,7 +8,7 @@ define([
     'widgets/table/rowCollection'
 ],
     function (baseApp, BaseView, BaseModel, ConfigurableModel, BaseCollection, baseUtil, RowCollection) {
-
+        'use strict';
 
         var TableModel = BaseModel.extend({
 

@@ -7,7 +7,7 @@ define([
     'widgets/table/rowCollection'
 ],
     function (baseApp, BaseView, BaseModel, baseUtil, paginationTemplate, RowCollection) {
-
+        'use strict';
         var View = BaseView.extend({
 /*            constructor:function(){
                 BaseView.apply(this, arguments);

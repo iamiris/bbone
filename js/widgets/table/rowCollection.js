@@ -1,6 +1,6 @@
 define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (baseApp, baseUtil, BaseModel, BaseCollection) {
 
-
+    'use strict';
     var Collection = BaseCollection.extend({
         constructor: function (array, options) {
             var _this = this;
@@ -19,12 +19,12 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
         var filtersIndex = {
 
-        }
+        };
 
         collection.addFilter = function (filterConfig) {
             var hash = baseApp.getHash(JSON.stringify(filterConfig));
             filtersIndex[hash] = filterConfig;
-        }
+        };
 
         collection.removeFilter = function (filterConfig) {
             var hash = baseApp.getHash(filterConfig);
@@ -34,7 +34,7 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
             } else {
                 throw new Error('Filter missing');
             }
-        }
+        };
 
         collection.getFiltered = function (arrayOfModels) {
             //console.log(arrayOfModels.length, 'getFiltered');
@@ -47,21 +47,21 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
                 });
             }
 
-        }
+        };
 
         collection.getProcessedRecords = function(){
             return collection.getPaginated(collection.getFiltered(collection.toArray()));
-        }
+        };
 
         collection.processedEach = function (iterator, context) {
             var finalArray = collection.getProcessedRecords();
             _.each(finalArray, function (model, index) {
                 iterator.call(context || collection, model, index);
-            })
-        }
+            });
+        };
 
 
-    }
+    };
 
 
     var setupPagination = function (collection) {
@@ -75,9 +75,9 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
             if (configs.paginated) {
                 return arrayOfModels.splice((configs.page - 1) * configs.perPage, configs.perPage);
             } else {
-                return arrayOfModels
+                return arrayOfModels;
             }
-        }
+        };
 
         collection.nextPage = function () {
 
@@ -86,15 +86,15 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
             var page = collection.getConfig('page');
             collection.setConfig('page', Math.min(page + 1, totalPages));
-        }
+        };
 
         collection.prevPage = function () {
             var page = collection.getConfig('page');
             collection.setConfig('page', Math.max(1, page - 1));
-        }
+        };
 
 
-    }
+    };
 
     var configureMixin = function (context) {
         var config = new BaseModel();
@@ -107,7 +107,7 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
                 return config.get(key);
             },
             setConfigs: function (obj) {
-                config.set(obj)
+                config.set(obj);
             },
             getConfigs: function (useDeep) {
                 return config.toJSON(useDeep);
@@ -115,29 +115,29 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
             getConfigModel: function () {
                 return config;
             }
-        }
+        };
 
         _.extend(context, methods);
         context.setConfigs(_.extend({}, context.getOption('config')));
         context.listenTo(config, 'all', function (sourceEventName) {
             context.trigger.apply(context, ['config_' + sourceEventName].concat(_.rest(arguments)));
-        })
+        });
 
-    }
+    };
 
     var setupUrlFetch = function (collection) {
         collection.url = function () {
             return collection.getConfig('baseUrl');
-        }
+        };
 
         collection.parse = function (data) {
             collection.setConfig('totalRecords', 100);
             return _.map(data.results, function (item) {
                 return item.user;
-            })
-        }
+            });
+        };
 
-    }
+    };
 
     var setupFunctions = [configureMixin, setupFilters, setupPagination, setupUrlFetch];
 

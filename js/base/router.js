@@ -1,5 +1,5 @@
 define(function(require) {
-
+    "use strict";
     var util = require('base/util');
 
     var Router = Backbone.Router.extend({
