@@ -345,10 +345,6 @@ define([
             });
             messageStackView.render();
 
-            messageStack.messageCollection.on('all',function(){
-                console.log(arguments);
-            });
-
             this.on('showMessages', function (messages) {
                 messageStack.removeAllMessages();
                 _.each(messages, function (message) {
