@@ -28,10 +28,10 @@ define([
     var ButtonView = ElementView.extend({
         template: buttonViewTemplate,
         valueFunction: function () {
-            return;
+            return this.$('button').text();
         },
         valueChangeHandler: function (value) {
-            return;
+            this.$('button').text(value);
         }
     });
 
@@ -199,7 +199,7 @@ define([
         'checkList': CheckListView,
         'hidden': HiddenView,
         'json': HiddenJSONView,
-        'submit': ButtonView,
+        'button': ButtonView,
         'message': MessageView,
         'container': ContainerView
     };

@@ -58,12 +58,29 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
 
     var MessageItemView = Base.View.extend({
         tagName: 'li',
+        className:'alert',
         template: Handlebars.compile("{{#if isClosable}}<button type=\"button\" class=\"close remove_message\" >&times;</button>{{/if}}{{{message}}}"),
         events: {
             'click .remove_message': 'removeMessage'
         },
         removeMessage: function () {
             this.model.removeSelf();
+        },
+        postRender:function(){
+            var messageType = this.model.get('messageType');
+
+            var alertClass = 'alert-danger';
+
+            switch(messageType){
+                case 'warning':
+                    alertClass = 'alert-warning';
+                    break;
+                case 'success':
+                    alertClass = 'alert-success';
+                    break;
+
+            }
+            this.$el.addClass(alertClass);
         }
     });
 
