@@ -50,7 +50,7 @@ define(['base/app'], function(app) {
             return numberVal === numberVal;
         },
         'email': function(rule, value) {
-            var ck_email = /^([\w\-]+(?:\.[\w\-]+)*)@((?:[\w\-]+\.)*\w[\w\-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            var ck_email = /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-\\+]+)*@[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-\+]+)*(\.[A-Za-z]{2,})$/i;
             return ck_email.test($.trim(value));
         },
         'minlen': function(rule, value) {
