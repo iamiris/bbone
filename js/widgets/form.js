@@ -323,7 +323,7 @@ define([
             }
         },
         removeElement: function (model) {
-
+            //TODO: needs to be implemented
         },
         renderGroupContainers: function () {
             var model = this.model;
@@ -388,6 +388,16 @@ define([
         setElementValue: function (name, value) {
             var elements = this.model.get('elements');
             elements.get(name).set('value', value);
+        },
+        resetForm:function(clearMessages){
+            var elements = this.model.get('elements');
+            elements.each(function(model){
+                model.resetValue();
+            });
+
+            if(clearMessages){
+                this.trigger('clearMessages');
+            }
         }
     });
 

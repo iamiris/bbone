@@ -17,6 +17,14 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
         constructor:function(){
             Base.Model.apply(this, arguments);
             var elementModel = this;
+
+            //Set defaultValue if it is not set
+            var defaultValue = elementModel.get('defaultValue');
+            if(!defaultValue){
+                elementModel.set('defaultValue', elementModel.get('value'));
+            }
+
+            //add active rule listeners
             var elements = elementModel.collection;
             var activeRules = elementModel.get('activeRules');
             _.each(activeRules, function (rule) {
@@ -100,6 +108,10 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
         isElementDefault:function(){
             var attributes = this.toJSON();
             return attributes.value === attributes.defaultValue;
+        },
+        resetValue:function(){
+            var elementModel = this;
+            elementModel.set('value', elementModel.get('defaultValue'));
         }
     });
 
