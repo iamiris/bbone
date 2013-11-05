@@ -109,9 +109,12 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
             var attributes = this.toJSON();
             return attributes.value === attributes.defaultValue;
         },
-        resetValue:function(){
+        resetValue:function(clearMessages){
             var elementModel = this;
             elementModel.set('value', elementModel.get('defaultValue'));
+            if(clearMessages){
+                elementModel.set('errorCode','');
+            }
         }
     });
 

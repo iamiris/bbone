@@ -392,7 +392,7 @@ define([
         resetForm:function(clearMessages){
             var elements = this.model.get('elements');
             elements.each(function(model){
-                model.resetValue();
+                model.resetValue(true);
             });
 
             if(clearMessages){
