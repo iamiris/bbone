@@ -10,8 +10,8 @@ define(['require'],function(require){
     };
 
     dataLoader.define = function(id, config){
-        var requestConfig = _.extend({},requestDefaults, config)
-        requestIndex[id]=requestConfig
+        var requestConfig = _.extend({},requestDefaults, config);
+        requestIndex[id]=requestConfig;
     };
 
     var getConfig = dataLoader.getConfig=function(id){
