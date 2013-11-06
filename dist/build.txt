@@ -4,6 +4,7 @@ js/base.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
+js/base/formatter.js
 js/base/app.js
 js/base/model.js
 js/base/view.js
@@ -13,6 +14,7 @@ js/widgets/header.js
 js/base/root.js
 js/base/itemView.js
 js/base/collectionView.js
+js/base/configurableModel.js
 js/base/collection.js
 js/base/helpers.js
 js/base.js
@@ -36,6 +38,7 @@ text!widgets/form/radioListView.html
 text!widgets/form/selectView.html
 text!widgets/form/textAreaView.html
 text!widgets/form/buttonView.html
+text!widgets/form/messageView.html
 js/widgets/form.js
 js/widgets/tab.js
 js/widgets.js
@@ -45,6 +48,7 @@ js/base-list.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
+js/base/formatter.js
 js/base/app.js
 js/base/model.js
 js/base/view.js
@@ -54,6 +58,7 @@ js/widgets/header.js
 js/base/root.js
 js/base/itemView.js
 js/base/collectionView.js
+js/base/configurableModel.js
 js/base/collection.js
 js/base/helpers.js
 js/base.js
@@ -67,6 +72,7 @@ js/base-list-widgets.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
+js/base/formatter.js
 js/base/app.js
 js/base/model.js
 js/base/view.js
@@ -76,12 +82,16 @@ js/widgets/header.js
 js/base/root.js
 js/base/itemView.js
 js/base/collectionView.js
+js/base/configurableModel.js
 js/base/collection.js
 js/base/helpers.js
 js/base.js
 js/widgets/form/validator.js
 text!widgets/form/inputView.html
 js/widgets/form/element.js
+js/list/singleSelect.js
+js/list/multiSelect.js
+js/list.js
 text!widgets/messageStack/messageStack.html
 js/widgets/messageStack.js
 text!widgets/form/checkListView.html
@@ -90,9 +100,7 @@ text!widgets/form/radioListView.html
 text!widgets/form/selectView.html
 text!widgets/form/textAreaView.html
 text!widgets/form/buttonView.html
+text!widgets/form/messageView.html
 js/widgets/form.js
-js/list/singleSelect.js
 js/widgets/tab.js
 js/base-list-widgets.js
-js/list/multiSelect.js
-js/list.js
