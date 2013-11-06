@@ -36,6 +36,10 @@
         {
             name: 'base-list-widgets',
             include:['base', 'list']
+        },
+        {
+            name: 'base-list-idm',
+            include:['base', 'list']
         }
 
 
