@@ -28,21 +28,19 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
         },
         addMessage: function (obj) {
             var _this = this;
-            setTimeout(function () {
-                obj.ts = new Date().getTime();
-                _this.messageCollection.add(obj);
-            }, 0);
+            obj.ts = new Date().getTime();
+            _this.messageCollection.add(obj);
         },
         removeMessage: function (model) {
             this.messageCollection.remove(model);
         },
         removeAllMessages: function () {
             var _this = this;
-            setTimeout(function () {
-                _this.messageCollection.each(function (model) {
-                    model.removeSelf();
-                });
-            }, 0);
+            var messageIds = _this.messageCollection.pluck('ts');
+            _.each(messageIds,function (id) {
+                var model = _this.messageCollection.get(id);
+                model.removeSelf();
+            });
 
         }
 
@@ -128,7 +126,6 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
             this.viewIndex[model.id] = itemView;
         },
         removeMessage: function (model) {
-            console.log(model, 'removed');
             var itemView = this.viewIndex[model.id];
             this.viewIndex[model.id] = null;
             itemView.remove();

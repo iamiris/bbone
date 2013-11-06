@@ -353,7 +353,7 @@ define([
                 });
             });
 
-            this.on('clearMessages', function (error) {
+            this.on('clearMessages', function () {
                 messageStack.removeAllMessages();
             });
 
