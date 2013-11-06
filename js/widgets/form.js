@@ -356,6 +356,11 @@ define([
             this.on('clearMessages', function (error) {
                 messageStack.removeAllMessages();
             });
+
+            var errors =  this.model.get('errors');
+            if(errors && errors.length > 0){
+                this.trigger('showMessages', errors);
+            }
         },
         formSubmitHandler: function (e) {
             e.preventDefault();
