@@ -36,11 +36,12 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
             var def = getTemplateDefByHash(hash);
             if (!def) {
                 def = $.Deferred();
-                _this.cacheTemplate(def, hash);
+
                 //if template is already a function, can be used for using other template engines
                 if (typeof template === 'function') {
                     def.resolve(template);
                 } else if (typeof template === 'string') {
+                    _this.cacheTemplate(def, hash); //cache def only if template is not a function
                     //app.log(template, template.length, template.indexOf('.html'));
                     //if template is an url
                     //console.log(template.indexOf('.html'), template.length - 5);
