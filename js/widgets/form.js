@@ -132,10 +132,7 @@ define([
 
     var InputView = ElementView.extend({
         events: {
-            'change input': 'updateValue',
-            'blur input': 'resetIfEmpty',
-            'focus input': 'selectIfDefault',
-            'click input': 'clearIfDefault'
+            'change input': 'updateValue'
         },
         selectIfDefault: function () {
             if (this.model.isElementDefault()) {
