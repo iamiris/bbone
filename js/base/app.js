@@ -26,10 +26,13 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
             return Handlebars.compile(str);
         },
         router: new Router(),
-        getTemplateDef: function (template) {
+        getTemplateDef: function (template, templateType) {
             var _this = this;
             template = template || '';
             var hash = getHash(template);
+
+            var templateCompiler = templateType !== 'underscore' ? _this.compileTemplate : _.template;
+
             var def = getTemplateDefByHash(hash);
             if (!def) {
                 def = $.Deferred();
@@ -43,13 +46,13 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
                     //console.log(template.indexOf('.html'), template.length - 5);
                     if (/html$/.test(template)) {
                         require(['text!' + template], function (txt) {
-                            def.resolve(_this.compileTemplate(txt));
+                            def.resolve(templateCompiler(txt));
                         });
                     } else if (template.indexOf('#') === 0) {
-                        def.resolve(_this.compileTemplate($(template).html()));
+                        def.resolve(templateCompiler($(template).html()));
                     } else {
                         //if template is a template string
-                        def.resolve(_this.compileTemplate(template));
+                        def.resolve(templateCompiler(template));
                     }
                 }
             }

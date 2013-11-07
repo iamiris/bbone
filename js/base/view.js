@@ -30,7 +30,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             _this.beforeRender();
 
             var continueRender = function () {
-                app.getTemplateDef(_this.getTemplate()).done(function (templateFunction) {
+                app.getTemplateDef(_this.getTemplate(), _this.getTemplateType()).done(function (templateFunction) {
                     if (!_this.model) {
                         _this.model = new BaseModel();
                     }
@@ -64,8 +64,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         },
         renderTemplate: function (templateFunction) {
             //console.log(this.template, templateFunction(this.model.toJSON()));
-            var useDeepJSON = this.getOption('useDeepJSON');
-            this.$el.html(templateFunction(this.model.toJSON(useDeepJSON)));
+            this.$el.html(templateFunction(this.serialize()));
         },
         getOption: function (option) {
             //console.log(option, this.options[option],this[option]);
@@ -81,6 +80,10 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             if (!this[methodName]) {
                 this[methodName] = func;
             }
+        },
+        serialize:function(){
+            var useDeepJSON = this.getOption('useDeepJSON');
+            return this.model.toJSON(useDeepJSON);
         },
         remove:function(){
             this.removeChildViews();
@@ -114,6 +117,11 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                 throw new Error('Method with name: '+name + ' doesn\'t exists to deep extend');
             }
         });
+    };
+
+    BaseView.templateTypes = {
+        UNDERSCORE : 'underscore',
+        HANDLEBARS : 'handlebars'
     };
 
 
@@ -216,6 +224,10 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
 
         context.getTemplate = function () {
             return template;
+        };
+
+        context.getTemplateType = function(){
+            return context.getOption('templateType') || 'Handlebars';
         };
 
         context.removeReferences(function(){
