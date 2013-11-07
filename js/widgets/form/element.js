@@ -138,7 +138,8 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
             'change textarea':'updateValue',
             'blur textarea':'updateValue',
             'change .js-validate-change':'validateValue',
-            'blur .js-validate-blur':'validateValue'
+            'blur .js-validate-blur':'validateValue',
+            'keypress .js-update-keypress':'updateValue'
         },
         postRender: function() {
             this.syncAttributes();
