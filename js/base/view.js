@@ -97,8 +97,24 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                 });
             }
         }
+
     });
 
+
+    BaseView.deepExtendMethods = function(methodMap){
+        var viewPrototype = this.prototype;
+        _.each(methodMap,function(func, name){
+            var oldFunc = viewPrototype[name];
+            if(oldFunc){
+                viewPrototype[name] = function(){
+                    oldFunc.apply(this, arguments);
+                    func.apply(this,arguments);
+                };
+            }else{
+                throw new Error('Method with name: '+name + ' doesn\'t exists to deep extend');
+            }
+        });
+    };
 
 
     var bindDataEvents = function (context) {
@@ -144,10 +160,15 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         };
 
         var renderState = function (StateView) {
+
+            if(context.$('.state-view').length === 0){
+                throw new Error('Rendering state needs element with class "state-view".');
+            }
+
             statedView = util.createView({
                 View: StateView,
                 model: context.model,
-                parentEl: context.$('.state-view'),
+                parentEl: '.state-view',
                 parentView:context
             });
         };
