@@ -130,6 +130,16 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
         dataEvents:{
             'forceRender':'render'
         },
+        events:{
+            'change input':'updateValue',
+            'blur input':'updateValue',
+            'change select':'updateValue',
+            'blur select':'updateValue',
+            'change textarea':'updateValue',
+            'blur textarea':'updateValue',
+            'change .js-validate-change':'validateValue',
+            'blur .js-validate-blur':'validateValue'
+        },
         postRender: function() {
             this.syncAttributes();
         },
@@ -184,10 +194,9 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
         },
         updateValue: function(skipValidate) {
             this.model.set('value', this.valueFunction());
-            if (skipValidate !== true) {
-                this.model.isElementValid();
-            }
-
+        },
+        validateValue:function(){
+            this.model.isElementValid();
         }
     });
 

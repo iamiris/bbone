@@ -46,10 +46,6 @@ define([
     });
     var TextAreaView = ElementView.extend({
         template: textAreaTemplate,
-        events: {
-            'change textarea': 'updateValue',
-            'blur textarea': 'updateValue'
-        },
         valueFunction: function () {
             return this.$('textarea').val();
         },
@@ -60,10 +56,6 @@ define([
 
     var SelectView = ElementView.extend({
         template: selectViewTemplate,
-        events: {
-            'change select': 'updateValue',
-            'blur select': 'updateValue'
-        },
         valueFunction: function () {
             return this.$('select').val();
         },
@@ -131,9 +123,6 @@ define([
 
 
     var InputView = ElementView.extend({
-        events: {
-            'change input': 'updateValue'
-        },
         selectIfDefault: function () {
             if (this.model.isElementDefault()) {
                 this.$('input').select();
