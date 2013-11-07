@@ -32,6 +32,9 @@ define([
         },
         valueChangeHandler: function (value) {
             this.$('button').text(value);
+        },
+        activeChangeHandler:function(value){
+            this.$('button').prop('disabled', !value);
         }
     });
 
