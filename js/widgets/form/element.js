@@ -112,6 +112,7 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
         resetValue:function(clearMessages){
             var elementModel = this;
             elementModel.set('value', elementModel.get('defaultValue'));
+            this.updateActive();
             if(clearMessages){
                 elementModel.set('errorCode','');
             }
