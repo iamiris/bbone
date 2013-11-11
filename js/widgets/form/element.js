@@ -20,7 +20,7 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
 
             //Set defaultValue if it is not set
             var defaultValue = elementModel.get('defaultValue');
-            if(!defaultValue){
+            if(defaultValue === undefined){
                 elementModel.set('defaultValue', elementModel.get('value'));
             }
 
