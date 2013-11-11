@@ -222,7 +222,7 @@ define([
             var obj = {};
             if (errors.length === 0) {
                 elements.each(function (model) {
-                    if (model.is('active')) {
+                    if (model.is('active') && model.isNotEqual('type', 'button')) {
                         obj[model.id] = model.get('value');
                     }
                 });
