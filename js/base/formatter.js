@@ -80,7 +80,7 @@ define(function () {
         });
 
         var d3_format_decimalPoint = ".", d3_format_thousandsSeparator = ",", d3_format_grouping = [ 3, 3 ], d3_format_currencySymbol = "$";
-        var d3_formatPrefixes = [ "y", "z", "a", "f", "p", "n", "µ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" ].map(d3_formatPrefix);
+        var d3_formatPrefixes = _.map([ "y", "z", "a", "f", "p", "n", "µ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" ],d3_formatPrefix);
         d3.formatPrefix = function (value, precision) {
             var i = 0;
             if (value) {
