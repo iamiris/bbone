@@ -5,6 +5,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         constructor: function (options) {
             var _this = this;
             _this.removeQue = [];
+            _this.removed = false;
             Backbone.View.call(_this, options);
             _.each(setupFunctions, function (func) {
                 func(_this);
@@ -53,7 +54,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             };
 
             var metaDef = _this.loadMeta();
-            metaDef.done(metaLoadSuccess);
+            metaDef.done(ifNotRemoved(_this, metaLoadSuccess));
             return _this;
         },
         postRender: function () {
@@ -90,6 +91,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             Backbone.View.prototype.remove.call(this);
             this.removeReferences();
             this.removeQue = null;
+            this.removed=true;
         },
         removeReferences:function(func){
             if(func){
@@ -358,19 +360,21 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         var requestConfigs = context.getOption('requests') || context.requests;
         var runningRequestCount = 0;
 
-        var bumpLoadingUp = function () {
+        var bumpLoadingUp = ifNotRemoved(context,function () {
             runningRequestCount++;
             if (runningRequestCount > 0) {
                 context.loadingHandler.call(context, true);
             }
-        };
+        });
 
-        var bumpLoadingDown = function () {
+        var bumpLoadingDown = ifNotRemoved(context,function () {
             runningRequestCount--;
             if (runningRequestCount < 1) {
                 context.loadingHandler.call(context, false);
             }
-        };
+        });
+
+
         context.addRequest = function (config, callback) {
             var configArray = config;
             if (!_.isArray(configArray)) {
@@ -398,12 +402,12 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
 
         context.loadMeta = function () {
             if (!context.metaDef) {
-                var def = requestConfigs ? context.addRequest(requestConfigs, function () {
+                var def = requestConfigs ? context.addRequest(requestConfigs, ifNotRemoved(context, function () {
                     var requestsParser = context.getOption('requestsParser');
                     if (requestsParser) {
                         requestsParser.apply(context, arguments);
                     }
-                }) : $.when({});
+                })) : $.when({});
                 context.metaDef = def;
             }
             return context.metaDef;
@@ -438,6 +442,15 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             childViews=null;
             context=null;
         });
+    };
+
+
+    var ifNotRemoved = function(view,fn){
+        return function(){
+            if(!view.removed){
+                fn.apply(view, arguments);
+            }
+        };
     };
 
     var setupFunctions = [bindDataEvents, setupMetaRequests, setupTemplateEvents, setupAttributeWatch, setupActionNavigateAnchors, setupRenderEvents, setupStateEvents, setupChildViews];
