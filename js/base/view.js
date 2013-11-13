@@ -31,7 +31,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             _this.beforeRender();
 
             var continueRender = function () {
-                app.getTemplateDef(_this.getTemplate(), _this.getTemplateType()).done(function (templateFunction) {
+                app.getTemplateDef(_this.getTemplate(), _this.getTemplateType()).done(ifNotRemoved(_this, function (templateFunction) {
                     if (!_this.model) {
                         _this.model = new BaseModel();
                     }
@@ -42,7 +42,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                         _this.setState(_this.getState() || _this.getOption('state') || defaultState);
                     }
                     _this.postRender();
-                });
+                }));
 
             };
 
