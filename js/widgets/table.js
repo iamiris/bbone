@@ -125,27 +125,64 @@ define([
                     def.done(function (resp) {
                         coll.reset(resp.results);
                         coll.setConfig('totalRecords', resp.totalRecords);
-
+                        _this.renderRows(coll.toArray());
+                        /*
                         coll.each(function (model, index) {
                             _this.addItem(model, index, rowList);
                         });
+                        */
                     })
                 } else if (collConfig.baseUrl) {
                     _this.listenToOnce(coll, 'add', function () {
+                        _this.renderRows(coll.toArray());
+
+                        /*
                         coll.each(function (model, index) {
                             _this.addItem(model, index, rowList);
                         });
+                        */
+
                     })
                     coll.fetch({data: _.omit(collConfig, 'baseUrl'),
                         processData: true});
                 } else {
+
+                    _this.renderRows(coll.getProcessedRecords());
+
+                    /*
                     coll.processedEach(function (model, index) {
                         _this.addItem(model, index, rowList);
                     });
+                    */
                 }
                 el.show();
 
 
+            },
+            renderRows:function(arrayOfRecords){
+                var rowList = this.$('.row-list');
+                var _this = this;
+
+                if(arrayOfRecords.length === 0){
+                    _this.renderNoData();
+                }else{
+                    _.each(arrayOfRecords, function(model, index){
+                        _this.addItem(model, index, rowList);
+                    })
+                }
+            },
+            renderNoData:function(){
+                var _this = this;
+                var noDataTemplate = this.getOption('noDataTemplate') || 'No Records';
+                var rowList = this.$('.row-list');
+                var columns = this.getOption('columns');
+                baseApp.getTemplateDef(noDataTemplate, _this.getTemplateType()).done(function(templateFunction){
+                    var td = $('<td></td>').prop('colspan',columns.length);
+                    td.html(templateFunction({}));
+                    var tr = $('<tr class="table-row no-data-row"></tr>').appendTo(rowList);
+                    td.appendTo(tr);
+                });
+                
             },
             renderHeader: function (rowList) {
                 var _this = this;

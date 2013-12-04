@@ -19,7 +19,8 @@ define([
                 var rowCollection = this.getOption('rowCollection');
                 var records = rowCollection.getProcessedRecords();
                 var dataObj = rowCollection.getConfigs();
-                dataObj.start = ((dataObj.page-1)*dataObj.perPage)+1;
+
+                dataObj.start = (records.length !== 0)? ((dataObj.page-1)*dataObj.perPage)+1 : 0;
                 dataObj.end = Math.min((dataObj.page)*dataObj.perPage, dataObj.totalRecords);
                 this.$el.html(templateFunction(dataObj));
             },
