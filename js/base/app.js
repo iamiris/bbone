@@ -1,5 +1,8 @@
-define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function (require, Router, dataLoader) {
+define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (require, Router, dataLoader, baseUtil) {
     "use strict";
+
+
+
 
     var hex_md5 = window.hex_md5;
 
@@ -13,6 +16,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
     var getRequestDefByHash = function (hash) {
         return dataIndex[hash];
     };
+
 
 
     var templateIndex = {}, dataIndex = {}, stringIndex = {};
@@ -172,6 +176,27 @@ define(['require', 'base/router', 'base/dataLoader', 'base/formatter'], function
             }else{
                 return strKey;
             }
+        },
+        getPageAttribute:function(name){
+            console.log(name, this.appModel.toJSON());
+            return this.appModel.get(name);
+        },
+        getPageAttributes:function(){
+            return this.appModel.toJSON();
+        },
+        getUrl:function(params){
+            var url = '#';
+            if(params.appId){
+                url+=params.appId;
+            }
+            if(params.pageId){
+                url+='/'+params.pageId
+            }
+            if(params){
+                url+='/'+baseUtil.objectToParams(_.omit(params, 'appId', 'pageId'));
+            }
+
+            return url;
         },
         getHash: getHash
     };

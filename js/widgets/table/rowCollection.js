@@ -125,19 +125,22 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
     };
 
+
     var setupUrlFetch = function (collection) {
         collection.url = function () {
             return collection.getConfig('baseUrl');
         };
-
+        /*
         collection.parse = function (data) {
             collection.setConfig('totalRecords', 100);
             return _.map(data.results, function (item) {
                 return item.user;
             });
         };
-
+         */
     };
+
+
 
     var setupFunctions = [configureMixin, setupFilters, setupPagination, setupUrlFetch];
 

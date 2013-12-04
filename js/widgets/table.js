@@ -133,7 +133,7 @@ define([
                         */
                     })
                 } else if (collConfig.baseUrl) {
-                    _this.listenToOnce(coll, 'add', function () {
+                    _this.listenToOnce(coll, 'reset', function () {
                         _this.renderRows(coll.toArray());
 
                         /*
@@ -144,7 +144,7 @@ define([
 
                     })
                     coll.fetch({data: _.omit(collConfig, 'baseUrl'),
-                        processData: true});
+                        processData: true,reset: true});
                 } else {
 
                     _this.renderRows(coll.getProcessedRecords());
