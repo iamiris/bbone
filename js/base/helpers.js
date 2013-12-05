@@ -13,6 +13,10 @@ define(['base/app'], function (app) {
         return JSON.stringify(obj);
     });
 
+    Handlebars.registerHelper('toString', function (obj) {
+        return obj.toString();
+    });
+
     Handlebars.registerHelper('toggleClass', function (attributeName) {
 
         if (this[attributeName]) {

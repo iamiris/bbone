@@ -104,6 +104,8 @@ define([
                 _.each([setupRowRender], function (func) {
                     func.call(_this, options);
                 });
+                var rowCollection = this.getOption('rowCollection');
+                _this.listenTo(rowCollection, 'config_change:page', _this.render);
             },
             postRender: function () {
                 var _this = this;
@@ -119,49 +121,32 @@ define([
 
                     var def = _this.addRequest({
                         id: collConfig.requestId,
-                        params: _.omit(collConfig, 'requestId')
+                        params: _.result(_this, collConfig.getParams)
                     })
 
                     def.done(function (resp) {
                         coll.reset(resp.results);
-                        coll.setConfig('totalRecords', resp.totalRecords);
-                        _this.renderRows(coll.toArray());
-                        /*
-                        coll.each(function (model, index) {
-                            _this.addItem(model, index, rowList);
-                        });
-                        */
+                        _this.renderRows();
                     })
-                } else if (collConfig.baseUrl) {
+                } else if (coll.url) {
                     _this.listenToOnce(coll, 'reset', function () {
-                        _this.renderRows(coll.toArray());
-
-                        /*
-                        coll.each(function (model, index) {
-                            _this.addItem(model, index, rowList);
-                        });
-                        */
-
+                        _this.renderRows();
                     })
-                    coll.fetch({data: _.omit(collConfig, 'baseUrl'),
-                        processData: true,reset: true});
+                    coll.fetch({processData: true,reset: true});
                 } else {
 
-                    _this.renderRows(coll.getProcessedRecords());
+                    _this.renderRows();
 
-                    /*
-                    coll.processedEach(function (model, index) {
-                        _this.addItem(model, index, rowList);
-                    });
-                    */
                 }
                 el.show();
 
 
             },
-            renderRows:function(arrayOfRecords){
-                var rowList = this.$('.row-list');
+            renderRows:function(){
                 var _this = this;
+                var coll = _this.getOption('rowCollection');
+                var arrayOfRecords = coll.getProcessedRecords();
+                var rowList = this.$('.row-list');
 
                 if(arrayOfRecords.length === 0){
                     _this.renderNoData();

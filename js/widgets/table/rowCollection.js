@@ -50,7 +50,12 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
         };
 
         collection.getProcessedRecords = function(){
-            return collection.getPaginated(collection.getFiltered(collection.toArray()));
+            var config = collection.getConfigs();
+            if(config.requestId || collection.url){
+                return collection.toArray();
+            }else{
+                return collection.getPaginated(collection.getFiltered(collection.toArray()));
+            }
         };
 
         collection.processedEach = function (iterator, context) {
@@ -123,13 +128,21 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
             context.trigger.apply(context, ['config_' + sourceEventName].concat(_.rest(arguments)));
         });
 
+        config.on('change:page change:perPage',function(model){
+            var config = model.toJSON();
+            var start = (config.page-1)*config.perPage;
+            var end=Math.min(start+config.perPage, config.totalRecords);
+            model.set({
+                start:start,
+                end:end
+            });
+        })
+
     };
 
 
     var setupUrlFetch = function (collection) {
-        collection.url = function () {
-            return collection.getConfig('baseUrl');
-        };
+        //collection.url = collection.getConfig('baseUrl');
         /*
         collection.parse = function (data) {
             collection.setConfig('totalRecords', 100);
