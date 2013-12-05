@@ -91,9 +91,11 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
             var successParser = _this.parseSuccessResponse, failureParser = _this.parseFailureResponse;
 
             //if defined consider custom parser
-            if (requestConfig.parser) {
-                successParser = failureParser = requestConfig.parser;
+            if (requestConfig.responseParser) {
+                successParser = failureParser = requestConfig.responseParser;
             }
+
+            config.params = requestConfig.paramsParser(config.params);
 
             //get hash of id and parameters
             var hash = getHash(JSON.stringify(_.pick(config, 'id', 'params')));
@@ -103,7 +105,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
 
             if (!def) {
                 def = $.Deferred();
-                var request = dataLoader.getRequest(config.id,requestConfig.paramsParser(config.params));
+                var request = dataLoader.getRequest(config.id,config.params);
 
                 request.done(function (resp) {
                     var parsedResponse = successParser(resp);

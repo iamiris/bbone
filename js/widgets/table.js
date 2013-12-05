@@ -80,6 +80,12 @@ define([
                 view.remove();
             };
 
+            _this.removeAllRows = function(){
+                _.each(viewIndex, function(view, modelId){
+                    view.remove();
+                });
+            }
+
             _this.getModelViewAt = function (id) {
                 return viewIndex[id];
             };
@@ -105,14 +111,28 @@ define([
                     func.call(_this, options);
                 });
                 var rowCollection = this.getOption('rowCollection');
-                _this.listenTo(rowCollection, 'config_change:page', _this.render);
+                _this.listenTo(rowCollection, 'config_change:page', _this.loadRows);
+
+                rowCollection.on('all',function(){
+                    console.log(arguments);
+                })
+
+                _this.listenTo(rowCollection, 'reset', function () {
+                    _this.removeAllRows();
+                    _this.renderRows();
+                })
             },
             postRender: function () {
                 var _this = this;
-                var el = this.$el;
                 var rowList = this.$('.row-list');
-                var coll = this.getOption('rowCollection');
                 _this.renderHeader(rowList);
+                _this.loadRows();
+
+            },
+            loadRows:function(){
+                var _this = this;
+                var el = this.$el;
+                var coll = this.getOption('rowCollection');
                 el.hide();
 
                 var collConfig = coll.getConfigs();
@@ -121,26 +141,20 @@ define([
 
                     var def = _this.addRequest({
                         id: collConfig.requestId,
-                        params: _.result(_this, collConfig.getParams)
+                        params: collConfig
                     })
 
                     def.done(function (resp) {
+                        coll.setConfig('totalRecords', resp.totalRecords);
                         coll.reset(resp.results);
-                        _this.renderRows();
                     })
                 } else if (coll.url) {
-                    _this.listenToOnce(coll, 'reset', function () {
-                        _this.renderRows();
-                    })
+
                     coll.fetch({processData: true,reset: true});
                 } else {
-
                     _this.renderRows();
-
                 }
                 el.show();
-
-
             },
             renderRows:function(){
                 var _this = this;
@@ -202,6 +216,10 @@ define([
                     parentEl: rowList,
                     parentView: _this
                 })
+            },
+            loadingHandler:function(isLoading){
+                BaseView.prototype.loadingHandler.call(this, isLoading);
+                console.log(this.el);
             }
         })
 
