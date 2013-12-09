@@ -113,10 +113,6 @@ define([
                 var rowCollection = this.getOption('rowCollection');
                 _this.listenTo(rowCollection, 'config_change:page', _this.loadRows);
 
-                rowCollection.on('all',function(){
-                    console.log(arguments);
-                })
-
                 _this.listenTo(rowCollection, 'reset', function () {
                     _this.removeAllRows();
                     _this.renderRows();

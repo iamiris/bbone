@@ -17,6 +17,10 @@ define(['base/app'], function (app) {
         return obj.toString();
     });
 
+
+    Handlebars.registerHelper('formLabel', function (str) {
+        return app.getString('form.label.'+str);
+    });
     Handlebars.registerHelper('toggleClass', function (attributeName) {
 
         if (this[attributeName]) {
