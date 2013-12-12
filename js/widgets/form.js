@@ -148,6 +148,8 @@ define([
         }
     });
 
+
+
     var MessageView = ElementView.extend({
         template:messageViewTemplate,
         valueChangeHandler:function(value){
@@ -327,14 +329,27 @@ define([
         },
 
         renderMessageStack: function () {
+            /*
             var messageStack = new MessageStack.Model();
+
             var messageStackView = new MessageStack.View({
                 model: messageStack,
                 el: this.$('.message-stack')
             });
-            messageStackView.render();
+             messageStackView.render();
+            */
+            
+            var messageStackView = baseUtil.createView({
+                View:MessageStack.View,
+                Model:MessageStack.Model,
+                parentEl:'.message-stack',
+                parentView:this
+            });
 
-            this.on('showMessages', function (messages) {
+
+            var messageStack = messageStackView.model;
+
+            messageStackView.listenTo(this,'showMessages', function (messages) {
                 messageStack.removeAllMessages();
                 _.each(messages, function (message) {
                     var messageModel = new MessageStack.Model(message);
@@ -342,10 +357,28 @@ define([
                 });
             });
 
-            this.on('clearMessages', function () {
+            messageStackView.listenTo(this, 'clearMessages', function () {
                 messageStack.removeAllMessages();
             });
 
+
+            /*
+            this.on('showMessages', function (messages) {
+
+                messageStack.removeAllMessages();
+                _.each(messages, function (message) {
+                    console.log('showMessages handled', message.message)
+                    var messageModel = new MessageStack.Model(message);
+                    messageStack.addMessage(messageModel.toJSON());
+                });
+            });
+
+            this.on('clearMessages', function () {
+                console.log('clearMessages handled')
+                messageStack.removeAllMessages();
+            });
+
+            */
             var errors =  this.model.get('errors');
             if(errors && errors.length > 0){
                 this.trigger('showMessages', errors);

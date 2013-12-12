@@ -4,7 +4,6 @@ js/base.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
-js/base/formatter.js
 js/base/app.js
 js/base/model.js
 js/base/view.js
@@ -17,6 +16,7 @@ js/base/collectionView.js
 js/base/configurableModel.js
 js/base/collection.js
 js/base/helpers.js
+js/base/formatter.js
 js/base.js
 
 js/list.js
@@ -48,7 +48,6 @@ js/base-list.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
-js/base/formatter.js
 js/base/app.js
 js/base/model.js
 js/base/view.js
@@ -61,6 +60,7 @@ js/base/collectionView.js
 js/base/configurableModel.js
 js/base/collection.js
 js/base/helpers.js
+js/base/formatter.js
 js/base.js
 js/list/singleSelect.js
 js/list/multiSelect.js
@@ -72,7 +72,6 @@ js/base-list-widgets.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
-js/base/formatter.js
 js/base/app.js
 js/base/model.js
 js/base/view.js
@@ -85,6 +84,7 @@ js/base/collectionView.js
 js/base/configurableModel.js
 js/base/collection.js
 js/base/helpers.js
+js/base/formatter.js
 js/base.js
 js/widgets/form/validator.js
 text!widgets/form/inputView.html
@@ -110,7 +110,6 @@ js/base-list-idm.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
-js/base/formatter.js
 js/base/app.js
 js/base/model.js
 js/base/view.js
@@ -123,6 +122,7 @@ js/base/collectionView.js
 js/base/configurableModel.js
 js/base/collection.js
 js/base/helpers.js
+js/base/formatter.js
 js/base.js
 js/widgets/form/validator.js
 text!widgets/form/inputView.html
