@@ -225,6 +225,7 @@ define([
             if (errors.length === 0) {
                 elements.each(function (model) {
                     if (model.is('active') && model.isNotEqual('type', 'button')) {
+                        model.trigger('forceUpdate');
                         obj[model.id] = model.get('value');
                     }
                 });

@@ -129,7 +129,8 @@ define(['base/app', 'base', 'widgets/form/validator', 'text!./inputView.html'], 
         className: 'element',
         template: inputViewTemplate,
         dataEvents:{
-            'forceRender':'render'
+            'forceRender':'render',
+            'forceUpdate':'updateValue'
         },
         events:{
             'change input':'updateValue',
