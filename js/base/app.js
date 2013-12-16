@@ -2,12 +2,29 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
     "use strict";
 
 
-
+    $.browser = {
+        msie:false
+    }
 
     var hex_md5 = window.hex_md5;
 
+    function checksum(s)
+    {
+        var i;
+        var chk = 0x12345678;
+
+        for (i = 0; i < s.length; i++) {
+            chk += (s.charCodeAt(i) * i);
+        }
+
+        return chk;
+    }
+
+
     var getHash = function (key) {
-        return hex_md5(key.toString());
+        return checksum(key.toString());
+        //return 'hash_'+(hashCounter++);
+
     };
 
     var getTemplateDefByHash = function (hash) {
@@ -17,6 +34,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
         return dataIndex[hash];
     };
 
+    var idCounter = 0;
 
 
     var templateIndex = {}, dataIndex = {}, stringIndex = {};
@@ -72,10 +90,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
         log: function () {
             console.log.apply(console, arguments);
         },
-        parseSuccessResponse: function (resp) {
-            return resp;
-        },
-        parseFailureResponse: function (resp) {
+        responseParser: function (resp) {
             return resp;
         },
         appModel: new Backbone.Model(),
@@ -88,11 +103,12 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
             requestConfig.paramsParser = requestConfig.paramsParser || _.identity;
 
             //default parsers
-            var successParser = _this.parseSuccessResponse, failureParser = _this.parseFailureResponse;
+            //var successParser = _this.parseSuccessResponse, failureParser = _this.parseFailureResponse;
+            var requestParser = _this.responseParser;
 
             //if defined consider custom parser
             if (requestConfig.responseParser) {
-                successParser = failureParser = requestConfig.responseParser;
+                requestParser = requestConfig.responseParser;
             }
 
             config.params = requestConfig.paramsParser(config.params);
@@ -108,11 +124,13 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
                 var request = dataLoader.getRequest(config.id,config.params);
 
                 request.done(function (resp) {
-                    var parsedResponse = successParser(resp);
+                    var parsedResponse = requestParser(resp);
                     if (parsedResponse.errors) {
                         def.resolve(parsedResponse.errors);
                     } else {
-                        _this.cacheData(def, hash);
+                        if(config.cache === "session"){
+                            _this.cacheData(def, hash);
+                        }
                         def.resolve(parsedResponse);
 
                     }
@@ -200,7 +218,12 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
 
             return url;
         },
-        getHash: getHash
+
+        getHash: getHash,
+
+        getUniqueId: function () {
+            return '__tmp_' + app.getHash(idCounter++);
+        }
     };
 
 
