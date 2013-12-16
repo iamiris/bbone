@@ -220,12 +220,14 @@ define([
         },
         getValueObject: function () {
             var elements = this.get('elements');
+            elements.each(function(model){
+                model.trigger('forceUpdate');
+            });
             var errors = this.validateElements();
             var obj = {};
             if (errors.length === 0) {
                 elements.each(function (model) {
                     if (model.is('active') && model.isNotEqual('type', 'button')) {
-                        model.trigger('forceUpdate');
                         obj[model.id] = model.get('value');
                     }
                 });
