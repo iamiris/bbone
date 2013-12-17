@@ -223,6 +223,12 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
 
         getUniqueId: function () {
             return '__tmp_' + app.getHash(idCounter++);
+        },
+        setupApp:function(callback){
+            callback();
+        },
+        tearApp:function(callback){
+            callback();
         }
     };
 
