@@ -5,7 +5,7 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
 
 
     // Default Model.
-    var Model = Base.Model.extend({
+    var MessageStackModel = Base.Model.extend({
         initialize: function () {
             var _this = this;
             var removeMessage = _.bind(this.removeMessage, this);
@@ -99,6 +99,9 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
 
         initialize: function () {
             this.viewIndex = {};
+            if(!this.model){
+                this.model = new MessageStackModel()
+            }
             var messageCollection = this.model.messageCollection;
             this.listenTo(messageCollection, 'add remove', this.checkEmpty);
             this.listenTo(messageCollection, 'add', this.addMessage);
@@ -115,6 +118,9 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
             }
         },
         addMessage: function (model) {
+            if(!model.toJSON){
+                model = new MessageModel(model);
+            }
             var attributes = model.toJSON();
             var container = this.$('.' + attributes.messageType + '-list');
             var itemView = baseUtil.createView({
@@ -200,7 +206,7 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
 
     return {
         View: View,
-        Model: Model,
+        Model: MessageStackModel,
         MessageCollection: MessageCollection
     };
 

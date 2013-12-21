@@ -1,6 +1,9 @@
 define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) {
     "use strict";
 
+
+    //var loaderTemplate = '<div class="bubble-loader"><div class="1"></div><div class="2"></div><div class="3"></div></div>';
+
     var BaseView = Backbone.View.extend({
         constructor: function (options) {
             var _this = this;
@@ -28,6 +31,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         },
         render: function () {
             var _this = this;
+
             _this.beforeRender();
 
             var continueRender = function () {
@@ -35,6 +39,8 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                     if (!_this.model) {
                         _this.model = new BaseModel();
                     }
+                    var renderStartTime = new Date().getTime();
+
                     _this.renderTemplate(templateFunction);
                     setupSubViews(_this);
                     if (_this.setState) {
@@ -42,6 +48,11 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                         _this.setState(_this.getState() || _this.getOption('state') || defaultState);
                     }
                     _this.postRender();
+
+                    var diffTime = new Date().getTime() - renderStartTime;
+                    if(diffTime > 20){
+                        console.warn("Rendering Time: ",this.$el[0], diffTime);
+                    }
                 }));
 
             };
@@ -72,6 +83,11 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             return this.options[option] || this[option];
         },
         loadingHandler: function (isLoading) {
+            /*if(isLoading){
+                this.$el.append(loaderTemplate);
+            }else{
+                this.$('.bubble-loader').remove();
+            }*/
             this.$el.toggleClass('loading', isLoading);
         },
         metaLoadErrorHandler: function () {

@@ -126,7 +126,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
                 request.done(function (resp) {
                     var parsedResponse = requestParser(resp);
                     if (parsedResponse.errors) {
-                        def.resolve(parsedResponse.errors);
+                        def.reject(resp, parsedResponse.errors);
                     } else {
                         if(config.cache === "session"){
                             _this.cacheData(def, hash);
@@ -198,12 +198,13 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
             }
         },
         getPageAttribute:function(name){
-            console.log(name, this.appModel.toJSON());
+            //console.log(name, this.appModel.toJSON());
             return this.appModel.get(name);
         },
         getPageAttributes:function(){
             return this.appModel.toJSON();
         },
+        /*
         getUrl:function(params){
             var url = '#';
             if(params.appId){
@@ -218,7 +219,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
 
             return url;
         },
-
+        */
         getHash: getHash,
 
         getUniqueId: function () {
@@ -229,6 +230,28 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
         },
         tearApp:function(callback){
             callback();
+        },
+        navigateTo:function(appId, pageId, params){
+            app.router.navigate(this.getURL(appId, pageId, params), {trigger:true});
+        },
+        getURL:function(appId, pageId, params){
+            //console.log(arguments);
+            var url = '#';
+            if(appId){
+                url+=appId;
+            }
+            if(pageId){
+                url+='/'+pageId
+            }
+            if(params){
+                url+='/'+baseUtil.objectToParams(_.omit(params, 'appId', 'pageId'));
+            }
+
+            //console.log(url);
+            return url;
+
+
+            //return '#'+appId+'/'+pageId+'/'+baseUtil.objectToParams(params);
         }
     };
 
