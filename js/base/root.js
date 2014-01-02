@@ -4,9 +4,9 @@ define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp, 
 
 
     var renderPage = function(appId, pageId, params){
-        console.log('renderPage', appId, pageId);
+        //console.log('renderPage', appId, pageId, params);
         if(currentPageView){
-            console.log('currentPageView removed ', new Date().toLocaleTimeString());
+            //console.log('currentPageView removed ', new Date().toLocaleTimeString());
             currentPageView.remove();
         }
 
@@ -24,19 +24,21 @@ define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp, 
 
     var RootView = BaseView.extend({
         changeHandler: function(changes) {
-            var attr = this.model.toJSON();
-            console.log(attr);
+            var _this = this;
+            var attr = _this.model.toJSON();
             if (changes.hasOwnProperty('appId')) {
                 require(['apps/' + attr.appId], function() {
                     require(['apps/' + attr.appId + '/app'], function(currentApp) {
-                        var pageId = attr.pageId || currentApp.defaultPage;
-                        renderPage(attr.appId,pageId, attr);
+                        if (!attr.hasOwnProperty('pageId')) {
+                            _this.model.set('pageId', currentApp.defaultPage);
+                            attr = _this.model.toJSON();
+                        }
+                        renderPage(attr.appId,attr.pageId, attr);
                     });
                 });
             }else if (changes.hasOwnProperty('pageId')) {
                 require(['apps/' + attr.appId + '/app'], function(currentApp) {
-                    var pageId = attr.pageId || currentApp.defaultPage;
-                    renderPage(attr.appId,pageId, attr);
+                    renderPage(attr.appId,attr.pageId, attr);
                 });
             }else if(currentPageView){
                 currentPageView.model.reset(attr);

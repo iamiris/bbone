@@ -302,10 +302,10 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
 
     var watchAttributes = function (model) {
         var changes = model.changedAttributes();
-        console.log(changes, 'watchAttributes');
+        //console.log(changes, 'watchAttributes');
         _.each(changes, function (value, attribute) {
             var handler = this[attribute + 'ChangeHandler'];
-            console.log(value, attribute, handler);
+            //console.log(value, attribute, handler);
             if (handler && typeof handler === 'function') {
                 handler.call(this, value);
             }
