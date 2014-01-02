@@ -1,4 +1,4 @@
-define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (require, Router, dataLoader, baseUtil) {
+define(['require', 'base/router', 'base/dataLoader', 'base/util', 'base/model'], function (require, Router, dataLoader, baseUtil, BaseModel) {
     "use strict";
 
 
@@ -93,7 +93,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util'], function (req
         responseParser: function (resp) {
             return resp;
         },
-        appModel: new Backbone.Model(),
+        appModel: new BaseModel(),
         getRequestDef: function (config) {
             var _this = this;
 
