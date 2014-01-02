@@ -1,5 +1,5 @@
 define(function(require) {
-    "use strict";
+
     var util = require('base/util');
 
     var Router = Backbone.Router.extend({
@@ -25,15 +25,16 @@ define(function(require) {
                 var paramsObject = util.paramsToObject(params);
                 paramsObject.appId = appId;
                 paramsObject.pageId = pageId;
-                baseApp.appModel.set(paramsObject);
+                baseApp.appModel.reset(paramsObject);
             });
         },
         loadApp: function(appId, pageId, params) {
             require(['base/app'], function(baseApp) {
                 var paramsObject = util.paramsToObject(params);
-                baseApp.appModel.clear();
+                var appModel = baseApp.appModel;
+                //appModel.clear();
                 paramsObject.appId = appId;
-                baseApp.appModel.set(paramsObject);
+                baseApp.appModel.reset(paramsObject);
             });
         }
     });
