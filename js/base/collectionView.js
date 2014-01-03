@@ -56,13 +56,16 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
             _.each([setupCollectionRender], function (func) {
                 func.call(_this, options);
             });
+            _this.on('rendered', function(){
+                _this.renderItems();
+            });
         },
         tagName: 'ul',
         dataEvents: {
             'add' : 'addHandler',
             'remove': 'removeHandler'
         },
-        postRender: function() {
+        renderItems: function() {
             var _this = this;
             var el = this.$el;
             var coll = this.collection;

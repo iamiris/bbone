@@ -9,6 +9,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             var _this = this;
             _this.removeQue = [];
             _this.removed = false;
+            _this.rendered = false;
             Backbone.View.call(_this, options);
             _.each(setupFunctions, function (func) {
                 func(_this);
@@ -48,6 +49,8 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                         _this.setState(_this.getState() || _this.getOption('state') || defaultState);
                     }
                     _this.postRender();
+                    _this.rendered = true;
+                    _this.trigger('rendered');
 
                     var diffTime = new Date().getTime() - renderStartTime;
                     if(diffTime > 20){
