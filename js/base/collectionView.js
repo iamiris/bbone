@@ -16,21 +16,21 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
             var ItemView = _this.getOption('itemView') || BaseItemView;
 
             var view = util.createView({model: model, attributes:{'data-id':model.id}, View: ItemView, parentView:_this});
-            viewIndex[model.id] = view;
+            viewIndex[model.cid] = view;
 
             if (index === 0) {
                 view.$el.prependTo(containerEl);
             }else if (index >= coll.length - 1) {
                 view.$el.appendTo(containerEl);
             }else {
-                var beforeView = _this.getModelViewAt(coll.at(index - 1).id);
+                var beforeView = _this.getModelViewAt(coll.at(index - 1).cid);
                 view.$el.insertAfter(beforeView.$el);
             }
 
         };
 
         _this.removeItem = function(model) {
-            var view = _this.getModelViewAt(model.id);
+            var view = _this.getModelViewAt(model.cid);
             view.remove();
         };
 
