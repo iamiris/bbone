@@ -4,8 +4,8 @@ js/base.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
-js/base/app.js
 js/base/model.js
+js/base/app.js
 js/base/view.js
 js/plugins/requirejs-text-plugin.js
 text!widgets/header/header.html
@@ -48,8 +48,8 @@ js/base-list.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
-js/base/app.js
 js/base/model.js
+js/base/app.js
 js/base/view.js
 js/plugins/requirejs-text-plugin.js
 text!widgets/header/header.html
@@ -72,8 +72,8 @@ js/base-list-widgets.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
-js/base/app.js
 js/base/model.js
+js/base/app.js
 js/base/view.js
 js/plugins/requirejs-text-plugin.js
 text!widgets/header/header.html
@@ -110,8 +110,8 @@ js/base-list-idm.js
 js/base/util.js
 js/base/router.js
 js/base/dataLoader.js
-js/base/app.js
 js/base/model.js
+js/base/app.js
 js/base/view.js
 js/plugins/requirejs-text-plugin.js
 text!widgets/header/header.html
