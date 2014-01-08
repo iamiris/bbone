@@ -45,6 +45,7 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
                     _this.renderTemplate(templateFunction);
                     setupSubViews(_this);
                     if (_this.setState) {
+                        _this.clearState();
                         var defaultState = _.keys(_this.getOption('states'))[0];
                         _this.setState(_this.getState() || _this.getOption('state') || defaultState);
                     }
@@ -225,12 +226,19 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             return state;
         };
 
+        context.clearState = function(){
+            cleanUpState();
+            state=undefined;
+        };
+
         context.removeReferences(function(){
             stateConfigs = null;
             state=null;
             statedView=null;
             context=null;
         });
+
+
 
     };
 
