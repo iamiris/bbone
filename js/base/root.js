@@ -1,16 +1,21 @@
-define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp, Header) {
+define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp) {
+
+    "use strict";
 
     var currentPageView;
+    var currentApp;
 
 
-    var renderPage = function(appId, pageId, params){
-        //console.log('renderPage', appId, pageId, params);
-        if(currentPageView){
+    var renderPage = function(appId, pageId, params) {
+        console.log('renderPage', appId, pageId, params);
+        if (currentPageView) {
             //console.log('currentPageView removed ', new Date().toLocaleTimeString());
             currentPageView.remove();
         }
 
-        require(['apps/' + appId + '/pages/'+pageId], function(Page){
+
+
+        require(['apps/' + appId + '/pages/' + pageId], function(Page) {
             var view = new Page.View({
                 model: new Page.Model(params)
             });
@@ -19,28 +24,43 @@ define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp, 
             el.html(view.el);
             view.render();
             currentPageView = view;
-        })
-    }
+        });
+    };
 
     var RootView = BaseView.extend({
         changeHandler: function(changes) {
             var _this = this;
             var attr = _this.model.toJSON();
+            console.log(changes);
             if (changes.hasOwnProperty('appId')) {
                 require(['apps/' + attr.appId], function() {
-                    require(['apps/' + attr.appId + '/app'], function(currentApp) {
-                        if (!attr.hasOwnProperty('pageId')) {
-                            _this.model.set('pageId', currentApp.defaultPage);
-                            attr = _this.model.toJSON();
+                    require(['apps/' + attr.appId + '/app'], function(activeApp) {
+                        
+                        if (currentApp) {
+                            currentApp.tearApp();
                         }
-                        renderPage(attr.appId,attr.pageId, attr);
+                        activeApp.setupApp(function() {
+                            if (!attr.hasOwnProperty('pageId')) {
+                                _this.model.set('pageId', activeApp.defaultPage);
+                            }else{
+                                renderPage(attr.appId, attr.pageId, attr);
+                            }
+                        });
+                        currentApp = activeApp;
+
                     });
                 });
-            }else if (changes.hasOwnProperty('pageId')) {
-                require(['apps/' + attr.appId + '/app'], function(currentApp) {
-                    renderPage(attr.appId,attr.pageId, attr);
+            } else if (changes.hasOwnProperty('pageId')) {
+                require(['apps/' + attr.appId + '/app'], function(activeApp) {
+                    if(changes.pageId === undefined){
+                        _this.model.set('pageId', activeApp.defaultPage);
+                            attr = _this.model.toJSON();
+                    }else{
+                        renderPage(attr.appId, attr.pageId, attr);
+                    }
+                    
                 });
-            }else if(currentPageView){
+            } else if (currentPageView) {
                 currentPageView.model.reset(attr);
             }
         }

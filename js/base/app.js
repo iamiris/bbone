@@ -229,7 +229,10 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util', 'base/model'],
             callback();
         },
         tearApp:function(callback){
-            callback();
+            if(callback){
+                callback();
+            }
+            
         },
         navigateTo:function(appId, pageId, params){
             app.router.navigate(this.getURL(appId, pageId, params), {trigger:true});
@@ -241,7 +244,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util', 'base/model'],
                 url+=appId;
             }
             if(pageId){
-                url+='/'+pageId
+                url+='/'+pageId;
             }
             if(params){
                 url+='/'+baseUtil.objectToParams(_.omit(params, 'appId', 'pageId'));
