@@ -270,11 +270,6 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
 
         var subViewConfigs = context.getOption('views');
 
-        _.each(subViewConfigs, function (viewConfig, viewName) {
-            viewConfig.parentView = context;
-            views[viewName] = util.createView(viewConfig);
-        });
-
         context.getSubView = function (id) {
             var subView = views[id];
             if (subView) {
@@ -284,7 +279,19 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             }
         };
 
-        context.getSubModel = function (viewId) {
+        context.setSubView = function(viewName, view) {
+            views[viewName] = view;
+        };
+
+        context.getAllSubViews = function() {
+            return views;
+        };
+
+        context.getSubCollection = function(viewId) {
+            return context.getSubView(viewId).collection;
+        };
+
+        context.getSubModel = function(viewId) {
             return context.getSubView(viewId).model;
         };
 
@@ -292,31 +299,41 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
             return context.getSubModel(viewId).get(attributeName);
         };
 
-        context.removeReferences(function(){
-            subViewConfigs=null;
-            views=null;
-            context=null;
+        context.removeReferences(function() {
+            subViewConfigs = null;
+            views = null;
+            context = null;
+
+        });
+
+        _.each(subViewConfigs, function(viewConfig, viewName) {
+            if(typeof viewConfig === 'function'){
+                viewConfig = viewConfig.call(context);
+            }
+            viewConfig.parentView = context;
+            var view = util.createView(viewConfig);
+            context.setSubView(viewName, view);
         });
 
     };
 
 
-    var setupAttributeWatch = function (context) {
+    var setupAttributeWatch = function(context) {
 
         var model = context.model;
         if (model) {
-            context.listenTo(model,'change', _.bind(watchAttributes, context));
-            syncAttributes.call(context, model);
+            context.listenToOnce(context, 'rendered', function() {
+                syncAttributes.call(context, model);
+                context.listenTo(model, 'change', _.bind(watchAttributes, context));
+            });
         }
 
     };
 
-    var watchAttributes = function (model) {
+    var watchAttributes = function(model) {
         var changes = model.changedAttributes();
-        //console.log(changes, 'watchAttributes');
-        _.each(changes, function (value, attribute) {
+        _.each(changes, function(value, attribute) {
             var handler = this[attribute + 'ChangeHandler'];
-            //console.log(value, attribute, handler);
             if (handler && typeof handler === 'function') {
                 handler.call(this, value);
             }
@@ -328,18 +345,18 @@ define(['base/app', 'base/model', 'base/util'], function (app, BaseModel, util) 
         }
     };
 
-    var syncAttributes = function (model) {
+    var syncAttributes = function(model) {
         var changes = model.toJSON();
-        _.each(changes, function (value, attribute) {
+        _.each(changes, function(value, attribute) {
             var handler = this[attribute + 'ChangeHandler'];
             if (handler && typeof handler === 'function') {
-                handler.call(this, value);
+                handler.call(this, value, true);
             }
         }, this);
 
         var changeHandler = this.changeHandler;
         if (changeHandler && typeof changeHandler === 'function') {
-            changeHandler.call(this, changes);
+            changeHandler.call(this, changes, true);
         }
     };
 
