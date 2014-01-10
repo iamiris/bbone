@@ -21,7 +21,7 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
             }else{
                 collection.setConfigs({sortKey:key, sortOrder:newOrder});
             }
-        }
+        };
 
         collection.getSorted = function(){
             var config =  collection.getConfigs();
@@ -30,8 +30,8 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
                 toReturn.reverse();
             }
             return toReturn;
-        }
-    }
+        };
+    };
 
 
     var setupFilters = function (collection) {
@@ -161,26 +161,15 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
                 start:start,
                 end:end
             });
-        })
+        });
 
     };
 
 
-    var setupUrlFetch = function (collection) {
-        //collection.url = collection.getConfig('baseUrl');
-        /*
-        collection.parse = function (data) {
-            collection.setConfig('totalRecords', 100);
-            return _.map(data.results, function (item) {
-                return item.user;
-            });
-        };
-         */
-    };
 
 
 
-    var setupFunctions = [configureMixin, setupFilters, setupSortActions, setupPagination, setupUrlFetch];
+    var setupFunctions = [configureMixin, setupFilters, setupSortActions, setupPagination];
 
     return Collection;
 });
