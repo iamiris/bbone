@@ -11,6 +11,29 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
         }
     });
 
+    var setupSortActions = function(collection){
+        collection.setSortKey = function(key){
+            var config =  collection.getConfigs();
+            var newOrder = "asc";
+            if(key === config.sortKey){
+                newOrder = config.sortOrder === "asc" ? "desc" : "asc";
+                collection.setConfigs({sortOrder:newOrder});
+            }else{
+                collection.setConfigs({sortKey:key, sortOrder:newOrder});
+            }
+        }
+
+        collection.getSorted = function(){
+            var config =  collection.getConfigs();
+            var toReturn = collection.sortBy(config.sortKey);
+            if(config.sortOrder !== "asc"){
+                toReturn.reverse();
+            }
+            return toReturn;
+        }
+    }
+
+
     var setupFilters = function (collection) {
 
         var sortKey = collection.getOption('sortKey') || 'name';
@@ -54,7 +77,7 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
             if(config.requestId || collection.url){
                 return collection.toArray();
             }else{
-                return collection.getPaginated(collection.getFiltered(collection.toArray()));
+                return collection.getPaginated(collection.getFiltered(collection.getSorted(collection)));
             }
         };
 
@@ -102,7 +125,9 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
     };
 
     var configureMixin = function (context) {
-        var config = new BaseModel();
+        var config = new BaseModel({
+            sortOrder:'asc'
+        });
 
         var methods = {
             setConfig: function (key, value) {
@@ -155,7 +180,7 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
 
 
-    var setupFunctions = [configureMixin, setupFilters, setupPagination, setupUrlFetch];
+    var setupFunctions = [configureMixin, setupFilters, setupSortActions, setupPagination, setupUrlFetch];
 
     return Collection;
 });

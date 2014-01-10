@@ -1,4 +1,5 @@
 define(function() {
+
     "use strict";
 
     var paramsToObject = function(params) {
@@ -23,47 +24,19 @@ define(function() {
         return str.join(separator);
     };
 
-
-
-
-
-    return {
-        paramsToObject: paramsToObject,
-        objectToParams: objectToParams,
-        createView: function(config) {
-
-            var view;
-            var viewType = 'model';
+    var deployView = function(view, config){
 
             var parentView = config.parentView;
 
-            if (config.collection || config.Collection) {
-                viewType = 'collection';
-            }
-
-
-            if (viewType === 'model') {
-                if (config.Model) {
-                    config.model = new config.Model(config.attributes);
-                }
-            } else {
-                if (config.Collection) {
-                    config.collection = new config.Collection(config.items);
-                }
-            }
-
-            var filteredConfig = _.omit(config, 'Collection', 'Model', 'parentEl', 'skipRender', 'parentView');
-            view = new config.View(filteredConfig);
-
             if (view) {
                 //skip render if skipRender is true
-                if (!config.skipRender) {
+                if (config.skipRender !== true) {
                     view.render();
                 }
 
                 //if parentEl
-                if (config.parentEl) {
-                    if (config.replaceHTML) {
+                if (config.parentEl !== undefined) {
+                    if (config.replaceHTML === true) {
                         config.parentEl.empty();
                     }
 
@@ -74,15 +47,42 @@ define(function() {
                     }
 
                 }
+
+                if(parentView){
+                    parentView.addChildView(view);
+                }
+            }
+    };
+
+    return {
+        paramsToObject: paramsToObject,
+        objectToParams: objectToParams,
+        createView: function(config) {
+
+            var view;
+            var viewType = 'model';
+        
+            if (config.collection || config.Collection) {
+                viewType = 'collection';
             }
 
 
-            if(parentView){
-                parentView.addChildView(view);
+            if (viewType === 'model') {
+                if (config.Model) {
+                    config.model = new config.Model(config.modelAttributes);
+                }
+            } else {
+                if (config.Collection) {
+                    config.collection = new config.Collection(config.items);
+                }
             }
 
+            var filteredConfig = _.omit(config, 'Collection', 'Model', 'parentEl', 'skipRender', 'parentView', 'View');
+            view = new config.View(filteredConfig);
+            deployView(view, config);
             return view;
-        }
+        },
+        deployView:deployView
     };
 
 });

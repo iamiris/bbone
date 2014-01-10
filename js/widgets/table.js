@@ -157,7 +157,6 @@ define([
                 var rowModel = this.getOption('rowModel');
 
                 _.each(items, function(item) {
-
                     var CellView = cellTypeIndex[item.type] || ValueView;
                     var cellView = baseUtil.createView({
                         View: CellView,
@@ -200,7 +199,7 @@ define([
         var NoDataView = BaseView.extend({
             tagName:'tr',
             className:'table-row no-data-row',
-            template: '<td colspan="{{colspan}}">{{value}}</td>'
+            template: '<td colspan="{{colspan}}">{{{value}}}</td>'
         });
 
         var setupRowRender = function() {
@@ -234,7 +233,7 @@ define([
                         classNames: classList.join(' '),
                         value: baseApp.getFormatted(dataObj[item.key], item.formatter, dataObj),
                         align: item.align || 'left',
-                        width: item.width ? item.width + 'px' : 'auto',
+                        width: item.width !==undefined ? item.width + 'px' : 'auto',
                         renderHTML: item.renderHTML
                     };
 
@@ -318,7 +317,6 @@ define([
 
             _this.removeAllRows = function() {
                 _.each(viewIndex, function(view) {
-                    console.log(view.el, view.cid);
                     view.remove();
                 });
             };

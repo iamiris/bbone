@@ -1,4 +1,4 @@
-define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp) {
+define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp, Header) {
 
     "use strict";
 
@@ -28,6 +28,14 @@ define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp) 
     };
 
     var RootView = BaseView.extend({
+        postRender: function() {
+            var header = new Header.View({
+                el: this.$('#header'),
+                model: this.model
+            });
+            header.render();
+        },
+
         changeHandler: function(changes) {
             var _this = this;
             var attr = _this.model.toJSON();
@@ -35,14 +43,14 @@ define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp) 
             if (changes.hasOwnProperty('appId')) {
                 require(['apps/' + attr.appId], function() {
                     require(['apps/' + attr.appId + '/app'], function(activeApp) {
-                        
+
                         if (currentApp) {
                             currentApp.tearApp();
                         }
                         activeApp.setupApp(function() {
                             if (!attr.hasOwnProperty('pageId')) {
                                 _this.model.set('pageId', activeApp.defaultPage);
-                            }else{
+                            } else {
                                 renderPage(attr.appId, attr.pageId, attr);
                             }
                         });
@@ -52,18 +60,19 @@ define(['base/view', 'base/app', 'widgets/header'], function(BaseView, baseApp) 
                 });
             } else if (changes.hasOwnProperty('pageId')) {
                 require(['apps/' + attr.appId + '/app'], function(activeApp) {
-                    if(changes.pageId === undefined){
+                    if (changes.pageId === undefined) {
                         _this.model.set('pageId', activeApp.defaultPage);
-                            attr = _this.model.toJSON();
-                    }else{
+                        attr = _this.model.toJSON();
+                    } else {
                         renderPage(attr.appId, attr.pageId, attr);
                     }
-                    
+
                 });
             } else if (currentPageView) {
                 currentPageView.model.reset(attr);
             }
-        }
+        },
+        preRendered: true
     });
 
     return {
