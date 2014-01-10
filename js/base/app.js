@@ -258,10 +258,27 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util', 'base/model'],
         }
     };
 
+    _.extend(app, Backbone.Events);
+
 
     var formatterIndex = {
 
     };
+
+    $('body').on('click', '.dummy', function(e) {
+        e.preventDefault();
+        console.warn('dummy click prevented');
+    });
+
+    $('body').on('click', function(e) {
+        var target = $(e.target);
+        if (target.parents().index(this) === -1) {
+            if (!target.is(this)) {
+                return;
+            }
+        }
+        app.trigger('bodyClick', e);
+    });
 
 
     return app;
