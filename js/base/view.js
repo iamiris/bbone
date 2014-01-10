@@ -133,6 +133,12 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
                     func.call(this);
                 });
             }
+        },
+        show:function () {
+            this.$el.show();
+        },
+        hide:function(){
+            this.$el.hide();
         }
     });
 
