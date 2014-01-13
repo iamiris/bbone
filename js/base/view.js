@@ -503,6 +503,7 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
         var childViews = [];
         context.addChildView = function(view) {
             childViews.push(view);
+            view.parentView = context;
         };
         context.removeChildViews = function() {
             _.each(childViews, function(view) {
