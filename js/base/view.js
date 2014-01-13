@@ -510,6 +510,7 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
                 if (view && view.remove) {
                     view.remove();
                 }
+                view.parentView = null;
             });
             childViews = [];
         };
