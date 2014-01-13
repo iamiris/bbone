@@ -26,20 +26,20 @@ define([
             postRender: function() {
                 var _this = this;
                 var items = this.model.get('items');
-                var navListView = baseUtil.createView({
+                baseUtil.createView({
                     View: Base.CollectionView,
                     collection: items,
                     el: _this.$('.ib-list'),
-                    itemView: NavItemView,
+                    ItemView: NavItemView,
                     parentView:_this
                 });
 
-                var tabListView = baseUtil.createView({
+                baseUtil.createView({
                     View: Base.CollectionView,
                     tagName: 'div',
                     collection: items,
                     el: _this.$('.tab-panes'),
-                    itemView: TabItemView,
+                    ItemView: TabItemView,
                     parentView:_this
                 });
 

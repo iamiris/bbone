@@ -7,7 +7,7 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
     // Default Model.
     var MessageStackModel = Base.Model.extend({
         initialize: function () {
-            var _this = this;
+            
             var removeMessage = _.bind(this.removeMessage, this);
             var messageCollection = new MessageCollection();
             messageCollection.on('add', function (model) {
@@ -64,7 +64,7 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
     var MessageItemView = Base.View.extend({
         tagName: 'li',
         className: 'alert',
-        template: Handlebars.compile("{{#if isClosable}}<button type=\"button\" class=\"close remove_message\" >&times;</button>{{/if}}{{{message}}}"),
+        template: app.compileTemplate("{{#if isClosable}}<button type=\"button\" class=\"close remove_message\" >&times;</button>{{/if}}{{{message}}}"),
         events: {
             'click .remove_message': 'removeMessage'
         },
@@ -100,7 +100,7 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
         initialize: function () {
             this.viewIndex = {};
             if(!this.model){
-                this.model = new MessageStackModel()
+                this.model = new MessageStackModel();
             }
             var messageCollection = this.model.messageCollection;
             this.listenTo(messageCollection, 'add remove', this.checkEmpty);
@@ -122,7 +122,6 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
                 model = new MessageModel(model);
             }
             var attributes = model.toJSON();
-            var container = this.$('.' + attributes.messageType + '-list');
             var itemView = baseUtil.createView({
                 View: MessageItemView,
                 parentEl: '.' + attributes.messageType + '-list',
@@ -135,70 +134,6 @@ define(['base/app', 'base', 'list', 'text!./messageStack/messageStack.html'], fu
             var itemView = this.viewIndex[model.id];
             this.viewIndex[model.id] = null;
             itemView.remove();
-        },
-        postRender: function () {
-            var collection = this.model.messageCollection;
-            /*
-             var MsgListView = Base.View.extend({
-
-             initialize:function(){
-             this.listenTo(this.collection, 'remove',this.checkEmpty);
-             this.listenTo(this.collection, 'add',this.checkEmpty);
-             this.checkEmpty();
-             }
-
-             });
-
-
-             baseUtil.createView({
-             View: MsgListView,
-             collection: collection,
-             itemView: MessageItemView,
-             filter: function (item) {
-             return item.attributes.messageType === 'alert';
-             },
-             parentEl: '.alert-list',
-             parentView: this
-             })
-
-
-             baseUtil.createView({
-             View: MsgListView,
-             collection: collection,
-             itemView: MessageItemView,
-             filter: function (item) {
-             return item.attributes.messageType === 'warning';
-             },
-             parentEl: '.warning-list',
-             parentView: this
-             })
-
-
-             baseUtil.createView({
-             View: MsgListView,
-             collection: collection,
-             itemView: MessageItemView,
-             filter: function (item) {
-             return item.attributes.messageType === 'success';
-             },
-             parentEl: '.success-list',
-             parentView: this
-             })
-
-
-             baseUtil.createView({
-             View: MsgListView,
-             collection: collection,
-             itemView: MessageItemView,
-             filter: function (item) {
-             return item.attributes.messageType === 'failure';
-             },
-             parentEl: '.failure-list',
-             parentView: this
-             })
-
-             */
-
         }
 
     });

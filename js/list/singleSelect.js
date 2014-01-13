@@ -13,7 +13,7 @@ define(['base'], function (Base) {
                 View: Base.CollectionView,
                 collection: items,
                 parentEl: _this.$('.list-view'),
-                itemView: _this.getOption('ItemView') || ItemView,
+                ItemView: _this.getOption('ItemView') || ItemView,
                 parentView: _this
             });
         },
