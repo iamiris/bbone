@@ -34,6 +34,12 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
             view.remove();
         };
 
+        _this.removeAllItems = function(){
+            _.each(viewIndex, function(view){
+                view.remove();
+            });
+        };
+
         _this.getModelViewAt = function(id) {
             return viewIndex[id];
         };
@@ -75,6 +81,7 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
         },
         renderItems: function() {
             var _this = this;
+            _this.removeAllItems();
             var el = this.$el;
             var coll = this.collection;
             //el.hide();
