@@ -44,6 +44,10 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
             return viewIndex[id];
         };
 
+        if(coll.length > 0){
+            _this.on('rendered', _this.renderItems);
+        }
+
         _this.removeReferences(function(){
             _this = null;
             viewIndex = null;
@@ -61,9 +65,6 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
             BaseView.call(_this, options);
             _.each([setupCollectionRender], function (func) {
                 func.call(_this, options);
-            });
-            _this.on('rendered', function(){
-                _this.renderItems();
             });
         },
         tagName: 'ul',
