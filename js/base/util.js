@@ -29,6 +29,11 @@ define(function() {
             var parentView = config.parentView;
 
             if (view) {
+                
+                if(parentView){
+                    parentView.addChildView(view);
+                }
+
                 //skip render if skipRender is true
                 if (config.skipRender !== true) {
                     view.render();
@@ -48,9 +53,7 @@ define(function() {
 
                 }
 
-                if(parentView){
-                    parentView.addChildView(view);
-                }
+                
             }
     };
 
