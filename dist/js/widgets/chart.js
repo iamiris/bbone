@@ -1,0 +1,1 @@
+define(["base/app","base"],function(e,t){return{View:t.View,Model:t.Model}});
