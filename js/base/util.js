@@ -80,7 +80,7 @@ define(function() {
                 }
             }
 
-            var filteredConfig = _.omit(config, 'Collection', 'Model', 'parentEl', 'skipRender', 'parentView', 'View');
+            var filteredConfig = _.omit(config, 'Collection', 'Model', 'parentEl', 'skipRender', 'View');
             view = new config.View(filteredConfig);
             deployView(view, config);
             return view;
