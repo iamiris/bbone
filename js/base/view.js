@@ -1,4 +1,4 @@
-define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
+define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(app, BaseModel, util, setupConfig) {
     "use strict";
 
     var BaseView = Backbone.View.extend({
@@ -50,7 +50,7 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
             var time = new Date().getTime();
             _this.beforeRender();
 
-            var continueRender = ifNotRemoved(_this,function() {
+            var continueRender = ifNotRemoved(_this, function() {
 
                 if (_this.removeChildViews) {
                     _this.removeChildViews();
@@ -134,10 +134,10 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
                 });
             }
         },
-        show:function () {
+        show: function() {
             this.$el.show();
         },
-        hide:function(){
+        hide: function() {
             this.$el.hide();
         }
     });
@@ -344,48 +344,35 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
 
         var model = context.model;
         var preRendered = context.getOption('preRendered');
+
+        var syncAndWatch = function() {
+            syncAttributes.call(context, model.toJSON(), true);
+            context.listenTo(model, 'change', function() {
+                syncAttributes.call(context, model.changedAttributes());
+            });
+        };
+
         if (model) {
             if (!preRendered) {
-                context.listenToOnce(context, 'rendered', function() {
-                    syncAttributes.call(context, model);
-                    context.listenTo(model, 'change', _.bind(watchAttributes, context));
-                });
+                context.listenToOnce(context, 'rendered', syncAndWatch);
             } else {
-                syncAttributes.call(context, model);
-                context.listenTo(model, 'change', _.bind(watchAttributes, context));
+                syncAndWatch();
             }
-
         }
 
     };
 
-    var watchAttributes = function(model) {
-        var changes = model.changedAttributes();
+    var syncAttributes = function(changes, isInitial) {
         _.each(changes, function(value, attribute) {
             var handler = this[attribute + 'ChangeHandler'];
             if (handler && typeof handler === 'function') {
-                handler.call(this, value);
+                handler.call(this, value, isInitial);
             }
         }, this);
 
         var changeHandler = this.changeHandler;
         if (changeHandler && typeof changeHandler === 'function') {
-            changeHandler.call(this, changes);
-        }
-    };
-
-    var syncAttributes = function(model) {
-        var changes = model.toJSON();
-        _.each(changes, function(value, attribute) {
-            var handler = this[attribute + 'ChangeHandler'];
-            if (handler && typeof handler === 'function') {
-                handler.call(this, value, true);
-            }
-        }, this);
-
-        var changeHandler = this.changeHandler;
-        if (changeHandler && typeof changeHandler === 'function') {
-            changeHandler.call(this, changes, true);
+            changeHandler.call(this, changes, isInitial);
         }
     };
 
@@ -511,7 +498,7 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
                 if (view && view.remove) {
                     view.remove();
                 }
-                
+
             });
             childViews = [];
         };
@@ -523,6 +510,8 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
     };
 
 
+
+
     var ifNotRemoved = function(view, fn) {
         return function() {
             if (!view.removed) {
@@ -531,7 +520,7 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
         };
     };
 
-    var setupFunctions = [bindDataEvents, setupMetaRequests, setupTemplateEvents, setupAttributeWatch, setupActionNavigateAnchors, setupRenderEvents, setupStateEvents, setupChildViews];
+    var setupFunctions = [bindDataEvents, setupMetaRequests, setupTemplateEvents, setupAttributeWatch, setupActionNavigateAnchors, setupRenderEvents, setupStateEvents, setupChildViews, setupConfig];
 
     return BaseView;
 });
