@@ -507,10 +507,11 @@ define(['base/app', 'base/model', 'base/util'], function(app, BaseModel, util) {
         };
         context.removeChildViews = function() {
             _.each(childViews, function(view) {
+                view.parentView = null;
                 if (view && view.remove) {
                     view.remove();
                 }
-                view.parentView = null;
+                
             });
             childViews = [];
         };

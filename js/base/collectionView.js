@@ -31,6 +31,7 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
 
         _this.removeItem = function(model) {
             var view = _this.getModelViewAt(model.cid);
+            delete viewIndex[model.cid];
             view.remove();
         };
 
@@ -38,6 +39,7 @@ define(['base/view', 'base/itemView', 'base/util'], function(BaseView, BaseItemV
             _.each(viewIndex, function(view){
                 view.remove();
             });
+            viewIndex={};
         };
 
         _this.getModelViewAt = function(id) {
