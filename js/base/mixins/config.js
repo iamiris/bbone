@@ -8,12 +8,14 @@ define(['base/model'], function(BaseModel){
             if (handler && typeof handler === 'function') {
                 handler.call(this, value, isInitial);
             }
+            this.trigger('configChange:'+config, value);
         }, this);
 
         var configHandler = this.configHandler;
         if (configHandler && typeof configHandler === 'function') {
             configHandler.call(this, configs, isInitial);
         }
+        this.trigger('configChange', configs);
     };
 
     var setupConfig = function(context) {
