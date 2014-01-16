@@ -22,8 +22,7 @@ define(['base/bareModel'], function(BareModel) {
         var configs = context.getOption('configs');
         var configDefaults = context.getOption('configDefaults');
 
-        configs = _.extend({},configs, configDefaults);
-
+        configs = _.extend({},configDefaults, configs);
         if (!_.isEmpty(configs)) {
             var configModel = new BareModel(configs);
 
