@@ -13,8 +13,10 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
             sortOrder:'asc',
             perPage:5
         },
-        configHandler:function(){
-            //console.log(arguments);
+        configHandler:function(changes){
+            if(_.has(changes, 'sortKey') || _.has(changes, 'sortOrder')){
+                this.setConfig('page', 1);
+            }
         },
         isLocal:function(){
             var requestId = this.getConfig('requestId');
