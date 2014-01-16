@@ -1,16 +1,16 @@
-define(function() {
+define(['base/bareModel', 'base/mixins/config'], function(BareModel, setupConfig) {
     "use strict";
-    var BaseModel = Backbone.Model.extend({
+    var BaseModel = BareModel.extend({
         constructor: function (attributes, options) {
             var _this = this;
+            _this.options = options || {};
+
             if(options && options.defaults){
                 _this.defaults = options.defaults;
             }
-            if (!options) {
-                _this.options = {};
-            }
 
-            Backbone.Model.apply(_this, arguments);
+            Backbone.Model.apply(_this, arguments, options);
+            setupConfig.call(null, _this);
         },
         is: function(attribute) {
             return this.get(attribute) === true;

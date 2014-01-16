@@ -7,8 +7,6 @@ define([
 
         //TODO: Line Bar Stacked Bar Staked Area Bar with negative stack Dual Axis with line
 
-        
-
         return {
             View: Base.View,
             Model: Base.Model

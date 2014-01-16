@@ -2,13 +2,30 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
     'use strict';
     var Collection = BaseCollection.extend({
-        constructor: function (array, options) {
+        constructor: function () {
             var _this = this;
             BaseCollection.apply(_this, arguments);
             _.each(setupFunctions, function (func) {
                 func(_this);
             });
+        },
+        configDefaults:{
+            sortOrder:'asc',
+            perPage:5
+        },
+        configHandler:function(){
+            //console.log(arguments);
+        },
+        isLocal:function(){
+            var requestId = this.getConfig('requestId');
+            var url = this.url;
+            if(requestId && url){
+                return false;
+            }else{
+                return true;
+            }
         }
+
     });
 
     var setupSortActions = function(collection){
@@ -35,10 +52,6 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
 
     var setupFilters = function (collection) {
-
-        var sortKey = collection.getOption('sortKey') || 'name';
-        var sortOrder = collection.getOption('sortOrder') || 'asc';
-
 
         var filtersIndex = {
 
@@ -74,11 +87,15 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
         collection.getProcessedRecords = function(){
             var config = collection.getConfigs();
+            var processedRecords;
             if(config.requestId || collection.url){
-                return collection.toArray();
+                processedRecords = collection.toArray();
             }else{
-                return collection.getPaginated(collection.getFiltered(collection.getSorted(collection)));
+                var filteredRecords = collection.getFiltered(collection.getSorted(collection));
+                collection.setConfig('totalRecords', filteredRecords.length);
+                processedRecords = collection.getPaginated(filteredRecords);
             }
+            return processedRecords;
         };
 
         collection.processedEach = function (iterator, context) {
@@ -94,12 +111,8 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
     var setupPagination = function (collection) {
         var configs = collection.getConfigs();
-        collection.setConfig('totalRecords', collection.length);
-
         collection.getPaginated = function (arrayOfModels) {
-            //console.log(arrayOfModels.length, 'getPaginated');
             configs = collection.getConfigs();
-            collection.setConfig('totalRecords', arrayOfModels.length);
             if (configs.paginated) {
                 return arrayOfModels.splice((configs.page - 1) * configs.perPage, configs.perPage);
             } else {
@@ -169,7 +182,7 @@ define(['base/app', 'base/util' , 'base/model', 'base/collection'], function (ba
 
 
 
-    var setupFunctions = [configureMixin, setupFilters, setupSortActions, setupPagination];
+    var setupFunctions = [setupFilters, setupSortActions, setupPagination];
 
     return Collection;
 });

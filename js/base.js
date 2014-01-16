@@ -6,7 +6,6 @@ define(function(require) {
         CollectionView: require('base/collectionView'),
         ItemView: require('base/itemView'),
         Model: require('base/model'),
-        ConfigurableModel:require('base/configurableModel'),
         Collection: require('base/collection'),
         util: require('base/util'),
         app: require('base/app'),

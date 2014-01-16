@@ -25,8 +25,6 @@ define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(a
              }
              */
 
-
-
         },
         setupView: function() {
 

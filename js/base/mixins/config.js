@@ -1,6 +1,6 @@
-define(['base/model'], function(BaseModel){
+define(['base/bareModel'], function(BareModel) {
 
-	"use strict";
+    "use strict";
 
     var syncConfigs = function(configs, isInitial) {
         _.each(configs, function(value, config) {
@@ -8,7 +8,7 @@ define(['base/model'], function(BaseModel){
             if (handler && typeof handler === 'function') {
                 handler.call(this, value, isInitial);
             }
-            this.trigger('configChange:'+config, value);
+            this.trigger('configChange:' + config, value);
         }, this);
 
         var configHandler = this.configHandler;
@@ -20,23 +20,26 @@ define(['base/model'], function(BaseModel){
 
     var setupConfig = function(context) {
         var configs = context.getOption('configs');
+        var configDefaults = context.getOption('configDefaults');
+
+        configs = _.extend({},configs, configDefaults);
 
         if (!_.isEmpty(configs)) {
-            var configModel = new BaseModel(configs);
+            var configModel = new BareModel(configs);
 
             context.setConfig = function(key, value) {
                 configModel.set(key, value);
             };
 
-            context.setConfigs = function(map){
+            context.setConfigs = function(map) {
                 configModel.set(map);
             };
 
-            context.getConfigs = function(){
+            context.getConfigs = function() {
                 return configModel.toJSON();
             };
 
-            context.resetConfigs = function(map){
+            context.resetConfigs = function(map) {
                 configModel.reset(map);
             };
 
@@ -51,16 +54,14 @@ define(['base/model'], function(BaseModel){
                 });
             };
 
-            var preRendered = context.getOption('preRendered');
-
-            if (!preRendered) {
+            if (context instanceof Backbone.View && !context.getOption('preRendered')) {
                 context.listenToOnce(context, 'rendered', syncAndWatch);
-            } else {
+            }else{
                 syncAndWatch();
             }
-
         }
     };
+
 
     return setupConfig;
 

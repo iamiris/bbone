@@ -12,7 +12,7 @@ define([
            constructor:function(){
                 BaseView.apply(this, arguments);
                 var rowCollection = this.getOption('rowCollection');
-                this.listenTo(rowCollection, 'config_change',this.render);
+                this.listenTo(rowCollection, 'configChange',this.render);
             },
             template:paginationTemplate,
             renderTemplate:function(templateFunction){

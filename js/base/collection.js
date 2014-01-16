@@ -1,12 +1,16 @@
-define(['base/app','base/model'], function(baseApp, BaseModel) {
+define(['base/app','base/model', 'base/mixins/config'], function(baseApp, BaseModel, setupConfig) {
     "use strict";
     var BaseCollection = Backbone.Collection.extend({
         model: BaseModel,
         constructor: function (array, options) {
             var _this = this;
             _this.options = options || {};
-            Backbone.Collection.apply(_this,arguments);
 
+            //to avoid config options from being passed to model
+            arguments[1] = _.omit(options, 'configs');
+
+            Backbone.Collection.apply(_this,arguments);
+            setupConfig.call(null, _this);
         },
         getOption: function (option) {
             //console.log(option, this.options[option],this[option]);

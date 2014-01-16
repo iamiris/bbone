@@ -2,13 +2,12 @@ define([
         'base/app',
         'base/view',
         'base/model',
-        'base/configurableModel',
         'base/collection',
         'base/util',
         'widgets/table/rowCollection',
         'widgets/table/pagination'
     ],
-    function(baseApp, BaseView, BaseModel, ConfigurableModel, BaseCollection, baseUtil, RowCollection, Pagination) {
+    function(baseApp, BaseView, BaseModel, BaseCollection, baseUtil, RowCollection, Pagination) {
         'use strict';
 
         var TableModel = BaseModel.extend({
@@ -350,11 +349,8 @@ define([
                     func.call(_this, options);
                 });
                 var rowCollection = this.getOption('rowCollection');
-                _this.listenTo(rowCollection, 'config_change', _this.loadRows);
+                _this.listenTo(rowCollection, 'configChange', _this.loadRows);
 
-                _this.listenTo(rowCollection, 'reset', function() {
-                    _this.redrawTable();
-                });
             },
             redrawTable: function() {
                 this.removeAllRows();
@@ -366,10 +362,11 @@ define([
             },
             loadRows: function() {
                 var _this = this;
-                var el = this.$el;
-                var coll = this.getOption('rowCollection');
-                el.hide();
+                var eventName = 'loadComplete';
+                _this.stopListening(_this, eventName);
+                _this.listenToOnce(_this, eventName, _this.redrawTable);
 
+                var coll = this.getOption('rowCollection');
                 var collConfig = coll.getConfigs();
 
                 if (collConfig.requestId) {
@@ -380,18 +377,22 @@ define([
                     });
 
                     def.done(function(resp) {
-                        coll.setConfig('totalRecords', resp.totalRecords);
                         coll.reset(resp.results);
+                        coll.setConfig('totalRecords', resp.totalRecords);
+                        _this.trigger(eventName, eventName);
                     });
                 } else if (coll.url) {
-                    coll.fetch({
+                    var fetchDef = coll.fetch({
                         processData: true,
                         reset: true
                     });
+                    fetchDef.done(function(){
+                        _this.trigger(eventName);
+                    });
                 } else {
-                    _this.redrawTable();
+                    _this.trigger(eventName);
                 }
-                el.show();
+                
             },
             renderRows: function() {
                 var _this = this;

@@ -34,7 +34,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util', 'base/model'],
         return dataIndex[hash];
     };
 
-    var idCounter = 0;
+    var idCounter = 1;
 
 
     var templateIndex = {}, dataIndex = {}, stringIndex = {};
@@ -223,7 +223,7 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util', 'base/model'],
         getHash: getHash,
 
         getUniqueId: function () {
-            return '__tmp_' + app.getHash(idCounter++);
+            return '__tmp_' + idCounter++;
         },
         setupApp:function(callback){
             callback();
