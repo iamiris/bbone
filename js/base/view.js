@@ -363,6 +363,8 @@ define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(a
 
         });
 
+        context.addToMessageRoom(context, 'owner');
+
         _.each(subViewConfigs, function(viewConfig, viewName) {
             if (typeof viewConfig === 'function') {
                 viewConfig = viewConfig.call(context);
@@ -610,8 +612,6 @@ define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(a
                 }
             });
         };
-
-        context.addToMessageRoom(context);
 
         context.removeReferences(function() {
             eventViewIndex = null;
