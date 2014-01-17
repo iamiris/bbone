@@ -137,6 +137,18 @@ define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(a
         },
         hide: function() {
             this.$el.hide();
+        },
+        postMessage: function() {
+            var args = _.toArray(arguments);
+            args.unshift('all');
+            args.unshift('postMessage');
+            this.trigger.apply(this, args);
+        },
+        postMessageTo: function(viewName) {
+            var args = _.rest(arguments);
+            args.unshift(viewName);
+            args.unshift('postMessage');
+            this.trigger.apply(this, args);
         }
     });
 
@@ -178,6 +190,30 @@ define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(a
                         if (context[shandler]) {
                             var args = Array.prototype.slice.call(arguments);
                             args.unshift(sevent);
+                            context[shandler].apply(context, args);
+                        } else {
+                            throw shandler + ' Not Defined';
+                        }
+                    });
+                });
+            });
+        });
+    };
+
+    var bindCustomEvents = function(context) {
+        var eventList;
+        eventList = context.customEvents;
+        _.each(eventList, function(handler, event) {
+            var events, handlers, splitter;
+            splitter = /\s+/;
+            handlers = handler.split(splitter);
+            events = event.split(splitter);
+            _.each(handlers, function(shandler) {
+                _.each(events, function(sevent) {
+                    context.listenTo(context, sevent, function() {
+                        if (context[shandler]) {
+                            var args = Array.prototype.slice.call(arguments);
+                            //args.unshift(sevent);
                             context[shandler].apply(context, args);
                         } else {
                             throw shandler + ' Not Defined';
@@ -301,6 +337,7 @@ define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(a
 
         context.setSubView = function(viewName, view) {
             views[viewName] = view;
+            context.addToMessageRoom(view, viewName);
         };
 
         context.getAllSubViews = function() {
@@ -508,6 +545,80 @@ define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(a
     };
 
 
+    /*
+    var setupMessageRoom = function(context) {
+        var fromIndex = {};
+        var toIndex = {};
+        context.listenFromView = function(view, name) {
+            var currentView = fromIndex[name];
+            if (currentView) {
+                console.warn('removing listen from ', currentView);
+                delete fromIndex[name];
+            }
+            fromIndex[name] = view;
+
+            context.listenTo(view, 'viewEvent', function() {
+                var args = _.rest(arguments);
+                args.unshift('viewEvent:'+name);
+                _.each(toIndex, function(toView) {
+                    toView.trigger.apply(toView, args);
+                });
+            });
+        };
+
+        context.publishToView = function(view) {
+            toIndex[view.cid] = view;
+        };
+
+        context.publishViewEvent = function() {
+            var args = Array.prototype.slice(arguments);
+            args.unshift('viewEvent');
+            context.trigger.apply(context, args);
+        };
+
+        context.removeReferences(function() {
+            fromIndex = null;
+            toIndex = null;
+            context = null;
+        });
+    };
+    */
+
+    var setupMessageRoom = function(context) {
+        var eventViewIndex = {};
+        context.addToMessageRoom = function(view, viewName) {
+            eventViewIndex[viewName] = view;
+            context.listenTo(view, 'postMessage', function() {
+                var targetView = _.first(arguments);
+                var eventName = 'message';
+                var args = _.rest(arguments);
+                args.unshift(view);
+                args.unshift(viewName);
+                args.unshift(eventName);
+                if (targetView === 'all') {
+                    _.each(eventViewIndex, function(toView, toViewName) {
+                        //trigger only if view is not source
+                        if (viewName !== toViewName) {
+                            toView.trigger.apply(toView, args);
+                        }
+                    });
+                }else{
+                    var toView = eventViewIndex[targetView];
+                    if(toView){
+                        toView.trigger.apply(toView, args);
+                    }
+                }
+            });
+        };
+
+        context.addToMessageRoom(context);
+
+        context.removeReferences(function() {
+            eventViewIndex = null;
+            context = null;
+        });
+
+    };
 
 
     var ifNotRemoved = function(view, fn) {
@@ -518,7 +629,7 @@ define(['base/app', 'base/model', 'base/util', 'base/mixins/config'], function(a
         };
     };
 
-    var setupFunctions = [bindDataEvents, setupMetaRequests, setupTemplateEvents, setupAttributeWatch, setupActionNavigateAnchors, setupRenderEvents, setupStateEvents, setupChildViews, setupConfig];
+    var setupFunctions = [bindDataEvents, bindCustomEvents, setupMessageRoom, setupMetaRequests, setupTemplateEvents, setupAttributeWatch, setupActionNavigateAnchors, setupRenderEvents, setupStateEvents, setupChildViews, setupConfig];
 
     return BaseView;
 });
