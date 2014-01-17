@@ -4,7 +4,11 @@ define(['require', 'base/router', 'base/dataLoader', 'base/util', 'base/model'],
 
     $.browser = {
         msie:false
-    }
+    };
+
+    //fix caching in IE
+    $.ajaxSetup({ cache: false });
+
 
     var hex_md5 = window.hex_md5;
 
